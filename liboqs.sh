@@ -1,8 +1,11 @@
-git clone https://github.com/open-quantum-safe/liboqs
-cd liboqs
-git checkout tags/0.7.0
+ENABLED_ALGS=OQS_ENABLE_KEM_kyber_1024
 
-mkdir build
+git clone https://github.com/jiep/liboqs
+cd liboqs
+git checkout coins
+
+mkdir -p build
 cd build
-cmake ..
-make
+rm -rf *
+cmake -GNinja -DOQS_MINIMAL_BUILD="${ENABLED_ALGS}" ..
+ninja
