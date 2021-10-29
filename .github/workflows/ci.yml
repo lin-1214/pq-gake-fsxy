@@ -14,9 +14,9 @@ jobs:
         config:
           - {
               name: "Ubuntu Latest GCC",
-              artifact: "Linux.tar.xz",
+              artifact: "Linux.zip",
               os: ubuntu-20.04,
-              build_type: "Release", cc: "gcc", cxx: "g++"
+              build_type: "Release", cc: "gcc"
             }
           # - {
           #     name: "macOS Latest Clang",
@@ -34,7 +34,6 @@ jobs:
       shell: bash
       run: |
         CC=${{ matrix.config.cc }}
-        CXX=${{ matrix.config.cxx }}
 
         cmake \
             -S . \
@@ -49,12 +48,9 @@ jobs:
       shell: bash
       run: cd build && ctest
 
-    - name: Install Strip
-      run: cmake --install build --prefix instdir --strip
-
     - name: Pack
-      working-directory: instdir
-      run: cmake -E tar cJfv ../${{ matrix.config.artifact }} .
+      working-directory: build
+      run: zip -r ../${{ matrix.config.artifact }} bin lib
 
     - name: Upload
       uses: actions/upload-artifact@v1
@@ -98,12 +94,12 @@ jobs:
         config:
         - {
             name: "Ubuntu Latest GCC", artifact: "Linux.tar.xz",
-            os: ubuntu-latest
+            os: ubuntu-20.04
           }
-        - {
-            name: "macOS Latest Clang", artifact: "macOS.tar.xz",
-            os: ubuntu-latest
-          }
+        # - {
+        #     name: "macOS Latest Clang", artifact: "macOS.tar.xz",
+        #     os: ubuntu-latest
+        #   }
     needs: release
 
     steps:
