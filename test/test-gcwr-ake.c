@@ -1,6 +1,6 @@
 #include "../src/gcwr-ake.h"
 
-#define NUM_ALGOS 1
+#define NUM_ALGOS 2
 
 int main(void) {
 
@@ -8,7 +8,8 @@ int main(void) {
     // OQS_KEM_alg_classic_mceliece_6688128,
     // OQS_KEM_alg_ntru_hps4096821,
     // OQS_KEM_alg_saber_firesaber,
-    OQS_KEM_alg_kyber_1024
+    OQS_KEM_alg_kyber_1024,
+    OQS_KEM_alg_kyber_768
   };
 
   for (int i = 0; i < NUM_ALGOS; i++) {

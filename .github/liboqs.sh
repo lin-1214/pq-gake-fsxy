@@ -1,4 +1,4 @@
-ENABLED_ALGS=OQS_ENABLE_KEM_kyber_1024
+ENABLED_ALGS="OQS_ENABLE_KEM_kyber_1024;OQS_ENABLE_KEM_kyber_768"
 
 if [[ "$OSTYPE" == "linux-gnu"* ]]; then
   sudo apt update
