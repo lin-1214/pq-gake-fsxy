@@ -14,7 +14,7 @@ jobs:
         config:
           - {
               name: "Ubuntu Latest GCC",
-              artifact: "Linux",
+              artifact: "Linux.tar.xz",
               os: ubuntu-20.04,
               build_type: "Release", cc: "gcc"
             }
@@ -50,7 +50,7 @@ jobs:
 
     - name: Pack
       working-directory: build
-      run: zip -r ../${{ matrix.config.artifact }} bin lib
+      run: tar cJfv ../${{ matrix.config.artifact }} bin lib
 
     - name: Upload
       uses: actions/upload-artifact@v1
@@ -60,7 +60,7 @@ jobs:
 
   release:
     if: contains(github.ref, 'tags/v')
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-20.04
     needs: build
 
     steps:
@@ -93,12 +93,12 @@ jobs:
       matrix:
         config:
         - {
-            name: "Ubuntu Latest GCC", artifact: "Linux",
+            name: "Ubuntu Latest GCC", artifact: "Linux.tar.xz",
             os: ubuntu-20.04
           }
         # - {
         #     name: "macOS Latest Clang", artifact: "macOS.tar.xz",
-        #     os: ubuntu-latest
+        #     os: ubuntu-20.04
         #   }
     needs: release
 
