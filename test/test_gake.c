@@ -23,7 +23,7 @@ int main(int argc, char** argv){
   int SHOW = 10;
 
   if(!OQS_KEM_alg_is_enabled(KEM)) {
-    printf("%s is not enable or does not exist!\n", KEM);
+    printf("%s is not enabled or does not exist!\n", KEM);
     printf("Available KEM are: \n");
     for (int i = 0; i < OQS_KEM_alg_count(); i++) {
       if(OQS_KEM_alg_is_enabled(OQS_KEM_alg_identifier(i)))
