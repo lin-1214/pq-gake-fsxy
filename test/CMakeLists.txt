@@ -14,6 +14,11 @@ set(TEST_INDCCA ../src/indcca.c test_indcca.c)
 add_executable(test_indcca ${TEST_INDCCA})
 target_link_libraries(test_indcca PUBLIC oqs utils indcca aes256gcm)
 
+set(TEST_COMMITMENT ../src/commitment.c test_commitment.c)
+add_executable(test_commitment ${TEST_COMMITMENT})
+target_link_libraries(test_commitment PUBLIC oqs utils commitment)
+
 add_test(NAME aes256gcm COMMAND test_aes256gcm)
 add_test(NAME test_gcwr_ake COMMAND test_gcwr_ake)
 add_test(NAME test_indcca COMMAND test_indcca)
+add_test(NAME test_commitment COMMAND test_commitment)

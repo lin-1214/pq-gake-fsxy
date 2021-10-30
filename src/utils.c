@@ -45,3 +45,20 @@ void print_hex_short(const uint8_t *bytes, size_t length, size_t max) {
   }
   printf("\n");
 }
+
+void print_short_key_sep(const uint8_t *key, size_t length, size_t show, char* sep) {
+  for (size_t i = 0; i < show; i++) {
+    printf("%02x", key[i]);
+  }
+  printf("...");
+  for (size_t i = length - show; i < length; i++) {
+    printf("%02x", key[i]);
+  }
+  printf("%s", sep);
+}
+
+void init_to_zero(uint8_t *key, int length){
+  for(int i = 0; i < length; i++){
+    key[i] = 0;
+  }
+}
