@@ -1,4 +1,4 @@
-ENABLED_ALGS="OQS_ENABLE_KEM_kyber_1024;OQS_ENABLE_KEM_kyber_768;OQS_ENABLE_KEM_kyber_512;OQS_ENABLE_KEM_saber_lightsaber;OQS_ENABLE_KEM_saber_saber;OQS_ENABLE_KEM_saber_firesaber;OQS_ENABLE_KEM_ntru_hps2048509"
+ENABLED_ALGS="OQS_ENABLE_KEM_kyber_1024;OQS_ENABLE_KEM_kyber_768;OQS_ENABLE_KEM_kyber_512;OQS_ENABLE_KEM_saber_lightsaber;OQS_ENABLE_KEM_saber_saber;OQS_ENABLE_KEM_saber_firesaber;OQS_ENABLE_KEM_ntru_hps2048509;OQS_ENABLE_KEM_ntru_hps2048677"
 
 if [[ "$OSTYPE" == "linux-gnu"* ]]; then
   sudo apt update
