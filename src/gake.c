@@ -35,18 +35,6 @@ int check_keys(uint8_t *ka, uint8_t *kb, uint8_t *zero, size_t length) {
 
 void two_ake(OQS_KEM* kem, uint8_t *ekA1, uint8_t *ekB1, uint8_t *dkA1, uint8_t *dkB1, uint8_t *skA, uint8_t *skB){
 
-  // unsigned char eska[CRYPTO_SECRETKEYBYTES];
-  //
-  // unsigned char ake_senda[KEX_AKE_SENDABYTES];
-  // unsigned char ake_sendb[KEX_AKE_SENDBBYTES];
-  //
-  // unsigned char tk[KEX_SSBYTES];
-  //
-  // // Perform mutually authenticated key exchange
-  // kex_ake_initA(ake_senda, tk, eska, pkb); // Run by Alice
-  // kex_ake_sharedB(ake_sendb, kb, ake_senda, skb, pka); // Run by Bob
-  // kex_ake_sharedA(ka, ake_sendb, tk, eska, ska); // Run by Alice
-
   uint8_t *cA1 = malloc(kem->length_ciphertext);
   uint8_t *kA1 = malloc(kem->length_shared_secret);
   uint8_t *ekA2 = malloc(kem->length_public_key);
@@ -256,7 +244,7 @@ int check_commitments(Party* parties, int i, int num_parties, size_t length) {
     itoa(j, buf_int);
     memcpy(msg, parties[i].xs[j], length);
     memcpy(msg + length, buf_int, sizeof(int));
-    
+
     int res_check = check_commitment(parties[j].public_key,
                      msg,
                      parties[i].coins[j],
