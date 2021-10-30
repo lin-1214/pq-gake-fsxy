@@ -10,5 +10,10 @@ set(TEST_GCWR_AKE_SRCS ../src/gcwr-ake.c test-gcwr-ake.c)
 add_executable(test_gcwr_ake ${TEST_GCWR_AKE_SRCS})
 target_link_libraries(test_gcwr_ake PUBLIC utils gcwr-ake)
 
+set(TEST_INDCCA ../src/indcca.c test_indcca.c)
+add_executable(test_indcca ${TEST_INDCCA})
+target_link_libraries(test_indcca PUBLIC oqs utils indcca aes256gcm)
+
 add_test(NAME aes256gcm COMMAND test_aes256gcm)
 add_test(NAME test_gcwr_ake COMMAND test_gcwr_ake)
+add_test(NAME test_indcca COMMAND test_indcca)
