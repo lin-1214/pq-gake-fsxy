@@ -5,14 +5,6 @@
 
 #include "aes256gcm.h"
 
-// #ifndef COMMITMENTCOINSBYTES
-// #define COMMITMENTCOINSBYTES (AES_256_IVEC_LENGTH + KEX_SSBYTES)
-// #endif
-//
-// #ifndef DEM_LEN
-// #define DEM_LEN (KEX_SSBYTES + sizeof(int))
-// #endif
-
 typedef struct Commitment {
     OQS_KEM* kem;
     unsigned char* ciphertext_kem;

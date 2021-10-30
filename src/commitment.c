@@ -34,10 +34,10 @@ int commit(unsigned char* pk,
 
    // Coins = iv + coins kem
    unsigned char iv[AES_256_IVEC_LENGTH];
-   unsigned char coins_kem[commitment->kem->length_shared_secret];
+   unsigned char coins_kem[commitment->kem->length_coins];
 
    memcpy(iv, coins, AES_256_IVEC_LENGTH);
-   memcpy(coins_kem, coins + AES_256_IVEC_LENGTH, commitment->kem->length_shared_secret);
+   memcpy(coins_kem, coins + AES_256_IVEC_LENGTH, commitment->kem->length_coins);
 
    int ret = pke_enc(commitment->kem,
                      m, len_m,
@@ -64,6 +64,9 @@ int check_commitment(unsigned char* pk,
   init_to_zero(commitment->tag, AES_256_GCM_TAG_LENGTH);
 
   commit(pk, m, DEM_LEN, coins, commitment);
+
+  print_commitment(commitment_check);
+  print_commitment(commitment);
 
   int ret_ct_kem = memcmp(commitment->ciphertext_kem, commitment_check->ciphertext_kem, commitment->kem->length_ciphertext);
   int ret_ct_dem = memcmp(commitment->ciphertext_dem, commitment_check->ciphertext_dem, DEM_LEN);

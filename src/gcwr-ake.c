@@ -28,8 +28,8 @@ void ake_init(OQS_KEM* kem,
   memcpy(tempA1 + kem->length_shared_secret, dkA1, kem->length_secret_key);
   OQS_SHA3_sha3_256(hashA1, tempA1, kem->length_shared_secret + kem->length_secret_key);
 
-  uint8_t *coins = malloc(kem->length_shared_secret);
-  OQS_randombytes(rA1, kem->length_shared_secret);
+  uint8_t *coins = malloc(kem->length_coins);
+  OQS_randombytes(coins, kem->length_coins);
   OQS_KEM_encaps(kem, cA1, kA1, ekB1, coins);
 
   OQS_KEM_keypair(kem, ekA2, dkA2);
@@ -37,7 +37,7 @@ void ake_init(OQS_KEM* kem,
   OQS_MEM_secure_free(tempA1, kem->length_shared_secret + kem->length_secret_key);
   OQS_MEM_secure_free(hashA1, kem->length_shared_secret);
   OQS_MEM_secure_free(rA1, kem->length_shared_secret);
-  OQS_MEM_secure_free(coins, kem->length_shared_secret);
+  OQS_MEM_secure_free(coins, kem->length_coins);
 }
 
 void ake_algA(OQS_KEM* kem,
@@ -54,7 +54,7 @@ void ake_algA(OQS_KEM* kem,
 
   uint8_t *rB1 = malloc(kem->length_shared_secret);
   uint8_t *rB2 = malloc(kem->length_shared_secret);
-  uint8_t *coins = malloc(kem->length_shared_secret);
+  uint8_t *coins = malloc(kem->length_coins);
   OQS_randombytes(rB1, kem->length_shared_secret);
   OQS_randombytes(rB2, kem->length_shared_secret);
 
@@ -64,10 +64,10 @@ void ake_algA(OQS_KEM* kem,
   memcpy(tempB1 + kem->length_shared_secret, dkB1, kem->length_secret_key);
   OQS_SHA3_sha3_256(hashB1, tempB1, kem->length_shared_secret + kem->length_secret_key);
 
-  OQS_randombytes(coins, kem->length_shared_secret);
+  OQS_randombytes(coins, kem->length_coins);
   OQS_KEM_encaps(kem, cB1, kB1, ekA1, coins);
 
-  OQS_randombytes(coins, kem->length_shared_secret);
+  OQS_randombytes(coins, kem->length_coins);
   OQS_KEM_encaps(kem, cB2, kB2, ekA2, coins);
 
   OQS_KEM_decaps(kem, kA1, cA1, dkB1);
@@ -81,7 +81,7 @@ void ake_algA(OQS_KEM* kem,
   OQS_MEM_secure_free(hashB1, kem->length_shared_secret);
   OQS_MEM_secure_free(rB1, kem->length_shared_secret);
   OQS_MEM_secure_free(rB2, kem->length_shared_secret);
-  OQS_MEM_secure_free(coins, kem->length_shared_secret);
+  OQS_MEM_secure_free(coins, kem->length_coins);
 }
 
 void ake_algB(OQS_KEM* kem,
