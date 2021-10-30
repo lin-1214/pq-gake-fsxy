@@ -65,9 +65,6 @@ int check_commitment(unsigned char* pk,
 
   commit(pk, m, DEM_LEN, coins, commitment);
 
-  print_commitment(commitment_check);
-  print_commitment(commitment);
-
   int ret_ct_kem = memcmp(commitment->ciphertext_kem, commitment_check->ciphertext_kem, commitment->kem->length_ciphertext);
   int ret_ct_dem = memcmp(commitment->ciphertext_dem, commitment_check->ciphertext_dem, DEM_LEN);
   int ret_tag    = memcmp(commitment->tag, commitment_check->tag, AES_256_GCM_TAG_LENGTH);
