@@ -21,3 +21,7 @@ target_link_libraries(commitment PUBLIC indcca aes256gcm oqs ${OPENSSL_CRYPTO_LI
 set(GCWR_AKE_SRC gcwr-ake.c)
 add_library(gcwr-ake STATIC ${GCWR_AKE_SRC})
 target_link_libraries(gcwr-ake oqs ${OPENSSL_CRYPTO_LIBRARY} utils)
+
+set(GAKE_SRC gake.c)
+add_library(gake STATIC ${GAKE_SRC})
+target_link_libraries(gake oqs gcwr-ake commitment utils)

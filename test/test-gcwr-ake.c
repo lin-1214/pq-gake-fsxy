@@ -111,13 +111,13 @@ int main(void) {
 
     clock_t end_total = times(NULL);
 
-    print_stats(begin_init,
-                end_init,
-                end_static_keys,
-                end_alg_init,
-                end_algB,
-                end_algA,
-                end_total);
+    ake_print_stats(begin_init,
+                    end_init,
+                    end_static_keys,
+                    end_alg_init,
+                    end_algB,
+                    end_algA,
+                    end_total);
    printf("----------------------------------------------------------------------------------------\n");
 
   }

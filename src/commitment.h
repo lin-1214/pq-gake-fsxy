@@ -1,3 +1,6 @@
+#ifndef COMMITMENT_H
+#define COMMITMENT_H
+
 #include <oqs/oqs.h>
 
 #include "aes256gcm.h"
@@ -33,3 +36,5 @@ int check_commitment(unsigned char* pk,
                      unsigned char* m,
                      unsigned char* coins,
                      Commitment* commitment_check);
+
+#endif

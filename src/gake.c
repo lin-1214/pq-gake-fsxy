@@ -4,89 +4,120 @@
 #include <time.h>
 
 #include "gake.h"
+#include "gcwr-ake.h"
+#include "commitment.h"
 
-void print_sk(uint8_t *key) {
-  for(int j = 0; j < KEX_SSBYTES; j++){
+void print_sk(uint8_t *key, size_t length) {
+  for(size_t j = 0; j < length; j++){
     printf("%02x", key[j]);
   }
   printf("\n");
 }
 
-void xor_keys(uint8_t *x_a, uint8_t *x_b, uint8_t *x_out){
+void xor_keys(uint8_t *x_a, uint8_t *x_b, uint8_t *x_out, size_t length){
 
-  for (int j = 0; j < KEX_SSBYTES; j++) {
+  for (size_t j = 0; j < length; j++) {
     x_out[j] = x_a[j] ^ x_b[j];
   }
 }
 
-int check_keys(uint8_t *ka, uint8_t *kb, uint8_t *zero) {
-  if(memcmp(ka, kb, KEX_SSBYTES) != 0){
+int check_keys(uint8_t *ka, uint8_t *kb, uint8_t *zero, size_t length) {
+  if(memcmp(ka, kb, length) != 0){
     return 1;
   }
 
-  if(!memcmp(ka, zero, KEX_SSBYTES)){
+  if(!memcmp(ka, zero, length)){
     return 2;
   }
 
   return 0;
 }
 
-void two_ake(uint8_t *pka, uint8_t *pkb, uint8_t *ska, uint8_t *skb, uint8_t *ka, uint8_t *kb){
+void two_ake(OQS_KEM* kem, uint8_t *ekA1, uint8_t *ekB1, uint8_t *dkA1, uint8_t *dkB1, uint8_t *skA, uint8_t *skB){
 
-  unsigned char eska[CRYPTO_SECRETKEYBYTES];
+  // unsigned char eska[CRYPTO_SECRETKEYBYTES];
+  //
+  // unsigned char ake_senda[KEX_AKE_SENDABYTES];
+  // unsigned char ake_sendb[KEX_AKE_SENDBBYTES];
+  //
+  // unsigned char tk[KEX_SSBYTES];
+  //
+  // // Perform mutually authenticated key exchange
+  // kex_ake_initA(ake_senda, tk, eska, pkb); // Run by Alice
+  // kex_ake_sharedB(ake_sendb, kb, ake_senda, skb, pka); // Run by Bob
+  // kex_ake_sharedA(ka, ake_sendb, tk, eska, ska); // Run by Alice
 
-  unsigned char ake_senda[KEX_AKE_SENDABYTES];
-  unsigned char ake_sendb[KEX_AKE_SENDBBYTES];
+  uint8_t *cA1 = malloc(kem->length_ciphertext);
+  uint8_t *kA1 = malloc(kem->length_shared_secret);
+  uint8_t *ekA2 = malloc(kem->length_public_key);
+  uint8_t *dkA2 = malloc(kem->length_secret_key);
+  uint8_t *cB1 = malloc(kem->length_ciphertext);
+  uint8_t *kB1 = malloc(kem->length_shared_secret);
+  uint8_t *cB2 = malloc(kem->length_ciphertext);
+  uint8_t *kB2 = malloc(kem->length_shared_secret);
+  uint8_t *kA1_prime = malloc(kem->length_shared_secret);
 
-  unsigned char tk[KEX_SSBYTES];
+  ake_init(kem, dkA1, ekB1, cA1, kA1, ekA2, dkA2);
+  ake_algA(kem, ekA1, ekA2, dkB1, kB1, kB2, cA1, cB1, cB2, kA1_prime, skB);
+  ake_algB(kem, cB1, cB2, dkA1, dkA2, kA1, skA);
 
-  // Perform mutually authenticated key exchange
-  kex_ake_initA(ake_senda, tk, eska, pkb); // Run by Alice
-  kex_ake_sharedB(ake_sendb, kb, ake_senda, skb, pka); // Run by Bob
-  kex_ake_sharedA(ka, ake_sendb, tk, eska, ska); // Run by Alice
+  // Delete secrets and free
+  OQS_MEM_secure_free(dkA2, kem->length_secret_key);
+  OQS_MEM_secure_free(kA1, kem->length_shared_secret);
+  OQS_MEM_secure_free(kB1, kem->length_shared_secret);
+  OQS_MEM_secure_free(kB2, kem->length_shared_secret);
+  OQS_MEM_secure_free(kA1_prime, kem->length_shared_secret);
+
+  // Free
+  OQS_MEM_insecure_free(cA1);
+  OQS_MEM_insecure_free(cB1);
+  OQS_MEM_insecure_free(cB2);
+
 }
 
-void concat_masterkey(MasterKey* mk, Pid* pids, int num_parties, uint8_t *concat_mk) {
+void concat_masterkey(MasterKey* mk, Pid* pids, int num_parties, uint8_t *concat_mk, size_t length) {
   for (int i = 0; i < num_parties; i++) {
-    memcpy(concat_mk + i*KEX_SSBYTES, mk[i], KEX_SSBYTES);
+    memcpy(concat_mk + i*length, mk[i], length);
   }
 
   for (int j = 0; j < num_parties; j++) {
-    memcpy(concat_mk + num_parties*KEX_SSBYTES + PID_LENGTH*j, pids[j], PID_LENGTH);
+    memcpy(concat_mk + num_parties*length + PID_LENGTH*j, pids[j], PID_LENGTH);
   }
 }
 
-void print_party(Party* parties, int i, int num_parties, int show) {
+void print_party(OQS_KEM* kem, Party* parties, int i, int num_parties, int show) {
   printf("Party %d\n", i);
 
   printf("\tPublic key:  ");
-  print_short_key(parties[i].public_key, CRYPTO_PUBLICKEYBYTES, show);
+  print_hex_short(parties[i].public_key, kem->length_public_key, show);
 
   printf("\tSecret key:  ");
-  print_short_key(parties[i].secret_key, CRYPTO_SECRETKEYBYTES, show);
+  print_hex_short(parties[i].secret_key, kem->length_secret_key, show);
 
   printf("\tLeft key:    ");
-  print_short_key(parties[i].key_left, KEX_SSBYTES, show);
+  print_hex_short(parties[i].key_left, kem->length_shared_secret, show);
 
   printf("\tRight key:   ");
-  print_short_key(parties[i].key_right, KEX_SSBYTES, show);
+  print_hex_short(parties[i].key_right, kem->length_shared_secret, show);
 
   printf("\tSession id:  ");
-  print_short_key(parties[i].sid, KEX_SSBYTES, show);
+  print_hex_short(parties[i].sid, kem->length_shared_secret, show);
 
   printf("\tSession key: ");
-  print_short_key(parties[i].sk, KEX_SSBYTES, show);
+  print_hex_short(parties[i].sk, kem->length_shared_secret, show);
 
   printf("\tX: \n");
   for (int j = 0; j < num_parties; j++) {
     printf("\t\tX%d: ", j);
-    print_short_key(parties[i].xs[j], KEX_SSBYTES, show);
+    print_hex_short(parties[i].xs[j], kem->length_shared_secret, show);
   }
+
+  const int COMMITMENTCOINSBYTES = AES_256_IVEC_LENGTH + kem->length_shared_secret;
 
   printf("\tCoins: \n");
   for (int j = 0; j < num_parties; j++) {
     printf("\t\tr%d: ", j);
-    print_short_key(parties[i].coins[j], COMMITMENTCOINSBYTES, show);
+    print_hex_short(parties[i].coins[j], COMMITMENTCOINSBYTES, show);
   }
 
   printf("\tCommitments:\n");
@@ -98,7 +129,7 @@ void print_party(Party* parties, int i, int num_parties, int show) {
   printf("\tMaster Key: \n");
   for (int j = 0; j < num_parties; j++) {
     printf("\t\tk%d: ", j);
-    print_short_key(parties[i].masterkey[j], KEX_SSBYTES, show);
+    print_hex_short(parties[i].masterkey[j], kem->length_shared_secret, show);
   }
 
   printf("\tPids: \n");
@@ -110,36 +141,49 @@ void print_party(Party* parties, int i, int num_parties, int show) {
   printf("\tTerminated: %d\n", parties[i].term);
 }
 
-void init_parties(Party* parties, int num_parties) {
+void init_parties(OQS_KEM* kem, Party* parties, int num_parties) {
   for (int i = 0; i < num_parties; i++) {
     parties[i].commitments = malloc(sizeof(Commitment) * num_parties);
     parties[i].masterkey = malloc(sizeof(MasterKey) * num_parties);
     parties[i].pids = malloc(sizeof(Pid) * num_parties);
     parties[i].coins = malloc(sizeof(Coins) * num_parties);
     parties[i].xs = malloc(sizeof(X) * num_parties);
-
     for (int j = 0; j < num_parties; j++) {
       char pid[PID_LENGTH];
       sprintf(pid, "%s %d", "Party", j);
       memcpy(parties[i].pids[j], pid, PID_LENGTH);
     }
 
+    // const int DEM_LEN = kem->length_shared_secret + sizeof(int);
+    const int COMMITMENTCOINSBYTES = AES_256_IVEC_LENGTH + kem->length_shared_secret;
+
     for (int j = 0; j < num_parties; j++) {
-      init_to_zero(parties[i].commitments[j].ciphertext_kem, KYBER_CIPHERTEXTBYTES);
-      init_to_zero(parties[i].commitments[j].ciphertext_dem, DEM_LEN);
-      init_to_zero(parties[i].commitments[j].tag, AES_256_GCM_TAG_LENGTH);
+      init_commitment(kem, &parties[i].commitments[j]);
+      parties[i].coins[j] = malloc(COMMITMENTCOINSBYTES);
       init_to_zero(parties[i].coins[j], COMMITMENTCOINSBYTES);
-      init_to_zero(parties[i].masterkey[j], KEX_SSBYTES);
-      init_to_zero(parties[i].xs[j], KEX_SSBYTES);
+      parties[i].masterkey[j] = malloc(kem->length_shared_secret);
+      init_to_zero(parties[i].masterkey[j], kem->length_shared_secret);
+      parties[i].xs[j] = malloc(kem->length_shared_secret);
+      init_to_zero(parties[i].xs[j], kem->length_shared_secret);
     }
 
-    init_to_zero(parties[i].sid, KEX_SSBYTES);
-    init_to_zero(parties[i].sk, KEX_SSBYTES);
-    init_to_zero(parties[i].key_left, KEX_SSBYTES);
-    init_to_zero(parties[i].key_right, KEX_SSBYTES);
+    parties[i].sid = malloc(kem->length_shared_secret);
+    parties[i].sk  = malloc(kem->length_shared_secret);
+    parties[i].key_left = malloc(kem->length_shared_secret);
+    parties[i].key_right = malloc(kem->length_shared_secret);
+    init_to_zero(parties[i].sid, kem->length_shared_secret);
+    init_to_zero(parties[i].sk, kem->length_shared_secret);
+    init_to_zero(parties[i].key_left, kem->length_shared_secret);
+    init_to_zero(parties[i].key_right, kem->length_shared_secret);
 
-    crypto_kem_keypair(parties[i].public_key,
-                       parties[i].secret_key);
+    parties[i].public_key = malloc(kem->length_public_key);
+    parties[i].secret_key  = malloc(kem->length_secret_key);
+    init_to_zero(parties[i].public_key, kem->length_public_key);
+    init_to_zero(parties[i].secret_key, kem->length_secret_key);
+
+    OQS_KEM_keypair(kem,
+                    parties[i].public_key,
+                    parties[i].secret_key);
 
     parties[i].acc = 0;
     parties[i].term = 0;
@@ -147,9 +191,9 @@ void init_parties(Party* parties, int num_parties) {
   }
 }
 
-void print_parties(Party* parties, int num_parties, int show) {
+void print_parties(OQS_KEM* kem, Party* parties, int num_parties, int show) {
   for (int i = 0; i < num_parties; i++) {
-    print_party(parties, i, num_parties, show);
+    print_party(kem, parties, i, num_parties, show);
   }
 }
 
@@ -164,54 +208,55 @@ void free_parties(Party* parties, int num_parties) {
   free(parties);
 }
 
-void compute_sk_sid(Party* parties, int num_parties) {
+void compute_sk_sid(OQS_KEM* kem, Party* parties, int num_parties, size_t length) {
   for (int i = 0; i < num_parties; i++) {
-    unsigned char mki[(KEX_SSBYTES + PID_LENGTH*sizeof(char))*num_parties];
+    unsigned char mki[(length + PID_LENGTH*sizeof(char))*num_parties];
 
     // Concat master key
-    concat_masterkey(parties[i].masterkey, parties[i].pids, num_parties, mki);
+    concat_masterkey(parties[i].masterkey, parties[i].pids, num_parties, mki, kem->length_shared_secret);
 
-    unsigned char sk_sid[2*KEX_SSBYTES];
+    unsigned char sk_sid[2*length];
 
-    hash_g(sk_sid, mki, 2*KEX_SSBYTES);
+    OQS_SHA3_sha3_512(sk_sid, mki, 2*length);
 
-    memcpy(parties[i].sk, sk_sid, KEX_SSBYTES);
-    memcpy(parties[i].sid, sk_sid + KEX_SSBYTES, KEX_SSBYTES);
+    memcpy(parties[i].sk, sk_sid, length);
+    memcpy(parties[i].sid, sk_sid + length, length);
 
     parties[i].acc = 1;
     parties[i].term = 1;
   }
 }
 
-void compute_masterkey(Party* parties, int num_parties) {
+void compute_masterkey(OQS_KEM* kem, Party* parties, int num_parties, size_t length) {
 
   for (int i = 0; i < num_parties; i++) {
     memcpy(parties[i].masterkey[i],
-           parties[i].key_left, KEX_SSBYTES);
+           parties[i].key_left, length);
 
     for (int j = 1; j < num_parties; j++) {
-      MasterKey mk;
-      memcpy(mk, parties[i].key_left, KEX_SSBYTES);
+      MasterKey mk = malloc(num_parties*kem->length_shared_secret);
+      memcpy(mk, parties[i].key_left, length);
       for (int k = 0; k < j; k++) {
-        xor_keys(mk, parties[i].xs[mod(i-k-1,num_parties)], mk);
+        xor_keys(mk, parties[i].xs[mod(i-k-1,num_parties)], mk, length);
       }
 
       memcpy(parties[i].masterkey[mod(i-j, num_parties)],
-             mk, KEX_SSBYTES);
+             mk, length);
 
+      free(mk);
     }
   }
 }
 
-int check_commitments(Party* parties, int i, int num_parties) {
+int check_commitments(Party* parties, int i, int num_parties, size_t length) {
   for (int j = 0; j < num_parties; j++) {
-    unsigned char msg[KEX_SSBYTES + sizeof(int)];
+    unsigned char msg[length + sizeof(int)];
     char buf_int[sizeof(int)];
     init_to_zero((unsigned char*) buf_int, sizeof(int));
     itoa(j, buf_int);
-    memcpy(msg, parties[i].xs[j], KEX_SSBYTES);
-    memcpy(msg + KEX_SSBYTES, buf_int, sizeof(int));
-
+    memcpy(msg, parties[i].xs[j], length);
+    memcpy(msg + length, buf_int, sizeof(int));
+    
     int res_check = check_commitment(parties[j].public_key,
                      msg,
                      parties[i].coins[j],
@@ -224,85 +269,98 @@ int check_commitments(Party* parties, int i, int num_parties) {
   return 0;
 }
 
-int check_xs(Party* parties, int i, int num_parties) {
-  unsigned char zero[KEX_SSBYTES];
+int check_xs(OQS_KEM* kem, Party* parties, int i, int num_parties, size_t length) {
+  unsigned char zero[length];
 
-  for(int j = 0; j < KEX_SSBYTES; j++){
+  for(size_t j = 0; j < length; j++){
     zero[j] = 0;
   }
 
-  X check;
-  memcpy(check, parties[i].xs[0], KEX_SSBYTES);
+  X check = malloc(kem->length_shared_secret);
+  memcpy(check, parties[i].xs[0], length);
   for (int j = 0; j < num_parties - 1; j++) {
-    xor_keys(parties[i].xs[j+1], check, check);
+    xor_keys(parties[i].xs[j+1], check, check, length);
   }
 
-  int res = memcmp(check, zero, KEX_SSBYTES);
+  int res = memcmp(check, zero, length);
+  free(check);
   if (res != 0) {
     return 1;
   }
   return 0;
 }
 
-void compute_xs_commitments(Party* parties, int num_parties) {
+void compute_xs_commitments(OQS_KEM* kem, Party* parties, int num_parties, size_t length) {
+
   for (int i = 0; i < num_parties; i++) {
+
     X xi;
     Coins ri;
     Commitment ci;
 
-    unsigned char msg[KEX_SSBYTES + sizeof(int)];
-    init_to_zero(msg, KEX_SSBYTES + sizeof(int));
+    const int COMMITMENTCOINSBYTES = AES_256_IVEC_LENGTH + length;
+    const int DEM_LEN = length + sizeof(int);
+
+    init_commitment(kem, &ci);
+    ri = malloc(COMMITMENTCOINSBYTES);
+    xi = malloc(length);
+
+    unsigned char msg[length + sizeof(int)];
+    init_to_zero(msg, length + sizeof(int));
     char buf_int[sizeof(int)];
-    init_to_zero((unsigned char*) buf_int, KEX_SSBYTES + sizeof(int));
+    init_to_zero((unsigned char*) buf_int, sizeof(int));
     itoa(i, buf_int);
 
-    xor_keys(parties[i].key_right, parties[i].key_left, xi);
-    randombytes(ri, COMMITMENTCOINSBYTES);
+    xor_keys(parties[i].key_right, parties[i].key_left, xi, length);
+    OQS_randombytes(ri, COMMITMENTCOINSBYTES);
 
-    memcpy(msg, &xi, KEX_SSBYTES);
-    memcpy(msg + KEX_SSBYTES, &buf_int, sizeof(int));
+    memcpy(msg, xi, length);
+    memcpy(msg + length, &buf_int, sizeof(int));
     commit(parties[i].public_key, msg, DEM_LEN, ri, &ci);
-
     for (int j = 0; j < num_parties; j++) {
-      memcpy(parties[j].xs[i], &xi, KEX_SSBYTES);
-      memcpy(parties[j].coins[i], &ri, COMMITMENTCOINSBYTES);
+      memcpy(parties[j].xs[i], xi, length);
+      memcpy(parties[j].coins[i], ri, COMMITMENTCOINSBYTES);
       parties[j].commitments[i] = ci;
     }
+
+    // free_commitment(&ci);
+    free(ri);
+    free(xi);
   }
 }
 
-void compute_left_right_keys(Party* parties, int num_parties) {
+void compute_left_right_keys(OQS_KEM* kem, Party* parties, int num_parties) {
   for (int i = 0; i < num_parties; i++) {
     int right = mod(i+1, num_parties);
     int left = mod(i-1, num_parties);
 
-    two_ake(parties[i].public_key, parties[right].public_key,
+    two_ake(kem, parties[i].public_key, parties[right].public_key,
             parties[i].secret_key, parties[right].secret_key,
             parties[i].key_right,   parties[right].key_left);
 
-    two_ake(parties[i].public_key, parties[left].public_key,
+    two_ake(kem, parties[i].public_key, parties[left].public_key,
             parties[i].secret_key, parties[left].secret_key,
             parties[i].key_left,   parties[left].key_right);
   }
 }
 
-int check_all_keys(Party* parties, int num_parties) {
-  unsigned char  sk[KEX_SSBYTES];
-  unsigned char sid[KEX_SSBYTES];
+int check_all_keys(Party* parties, int num_parties, size_t length) {
+  unsigned char  sk[length];
+  unsigned char sid[length];
 
   for (int i = 0; i < num_parties - 1; i++) {
-    memcpy(sk,  parties[i].sk,  KEX_SSBYTES);
-    memcpy(sid, parties[i].sid, KEX_SSBYTES);
+    memcpy(sk,  parties[i].sk,  length);
+    memcpy(sid, parties[i].sid, length);
 
-    int res_sk  = memcmp(sk, parties[i+1].sk,  KEX_SSBYTES);
-    int res_sid = memcmp(sid, parties[i+1].sid, KEX_SSBYTES);
+    int res_sk  = memcmp(sk, parties[i+1].sk,  length);
+    int res_sid = memcmp(sid, parties[i+1].sid, length);
 
     if (res_sk != 0 || res_sid != 0) {
       return 1;
     }
 
-    memcpy(sk,  parties[i+1].sk,  KEX_SSBYTES);
-    memcpy(sid, parties[i+1].sid, KEX_SSBYTES);
+    memcpy(sk,  parties[i+1].sk,  length);
+    memcpy(sid, parties[i+1].sid, length);
 
   }
   return 0;

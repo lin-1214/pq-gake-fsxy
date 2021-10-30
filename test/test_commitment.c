@@ -57,7 +57,6 @@ int main(void) {
     print_commitment(commitment);
     printf(".............................................................\n");
 
-    printf("Llega\n");
     int equal = check_commitment(pk, m, coins, commitment);
 
     if (equal == 0) {

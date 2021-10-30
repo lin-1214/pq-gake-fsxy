@@ -1,3 +1,6 @@
+#ifndef GCWR_AKE_H
+#define GCWR_AKE_H
+
 #include <stdio.h>
 #include <string.h>
 #include <oqs/oqs.h>
@@ -36,3 +39,4 @@ void ake_algB(OQS_KEM* kem,
               const uint8_t* dkA2,
               const uint8_t* kA1,
               uint8_t* sk);
+#endif

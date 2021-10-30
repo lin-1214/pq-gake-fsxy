@@ -31,16 +31,8 @@ void ake_init(OQS_KEM* kem,
   uint8_t *coins = malloc(kem->length_shared_secret);
   OQS_randombytes(rA1, kem->length_shared_secret);
   OQS_KEM_encaps(kem, cA1, kA1, ekB1, coins);
-  printf("[U_A] Generating kA1...\n");
-  printf("[U_A] kA1: ");
-  print_hex(kA1, kem->length_shared_secret);
 
   OQS_KEM_keypair(kem, ekA2, dkA2);
-  printf("[U_A] Generating ekA2 and dkA2...\n");
-  printf("[U_A] ekA2: ");
-  print_hex_short(ekA2, kem->length_public_key, MAX);
-  printf("[U_A] dkA2: ");
-  print_hex_short(dkA2, kem->length_secret_key, MAX);
 
   OQS_MEM_secure_free(tempA1, kem->length_shared_secret + kem->length_secret_key);
   OQS_MEM_secure_free(hashA1, kem->length_shared_secret);
@@ -74,20 +66,11 @@ void ake_algA(OQS_KEM* kem,
 
   OQS_randombytes(coins, kem->length_shared_secret);
   OQS_KEM_encaps(kem, cB1, kB1, ekA1, coins);
-  printf("\n[U_B] Generating kB1...\n");
-  printf("[U_B] kB1: ");
-  print_hex(kB1, kem->length_shared_secret);
 
   OQS_randombytes(coins, kem->length_shared_secret);
   OQS_KEM_encaps(kem, cB2, kB2, ekA2, coins);
-  printf("[U_B] Generating kB2...\n");
-  printf("[U_B] kB2: ");
-  print_hex(kB2, kem->length_shared_secret);
 
   OQS_KEM_decaps(kem, kA1, cA1, dkB1);
-  printf("[U_B] Generating kA1...\n");
-  printf("[U_B] kA1: ");
-  print_hex(kA1, kem->length_shared_secret);
 
   uint8_t *concat_keysB = malloc(3*kem->length_shared_secret);
   concat_keys(kA1, kB1, kB2, kem->length_shared_secret, concat_keysB);
@@ -111,15 +94,9 @@ void ake_algB(OQS_KEM* kem,
 
   uint8_t *kB1_prime = malloc(kem->length_shared_secret);
   OQS_KEM_decaps(kem, kB1_prime, cB1, dkA1);
-  printf("\n[U_A] Generating kB1_prime...\n");
-  printf("[U_A] kB1_prime: ");
-  print_hex(kB1_prime, kem->length_shared_secret);
 
   uint8_t *kB2_prime = malloc(kem->length_shared_secret);
   OQS_KEM_decaps(kem, kB2_prime, cB2, dkA2);
-  printf("[U_A] Generating kB2_prime...\n");
-  printf("[U_A] kB2_prime: ");
-  print_hex(kB2_prime, kem->length_shared_secret);
 
   uint8_t *concat_keysA = malloc(3*kem->length_shared_secret);
   concat_keys(kA1, kB1_prime, kB2_prime, kem->length_shared_secret, concat_keysA);

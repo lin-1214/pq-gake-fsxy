@@ -14,7 +14,10 @@ void print_commitment(Commitment* commitment) {
 void init_commitment(OQS_KEM* kem, Commitment* commitment) {
   commitment->kem = kem;
   commitment->ciphertext_kem = malloc(kem->length_ciphertext);
+  init_to_zero(commitment->ciphertext_kem, kem->length_ciphertext);
   commitment->ciphertext_dem = malloc(kem->length_shared_secret);
+  init_to_zero(commitment->ciphertext_dem, kem->length_shared_secret);
+  init_to_zero(commitment->tag, AES_256_GCM_TAG_LENGTH);
 }
 
 void free_commitment(Commitment* commitment) {
@@ -54,7 +57,6 @@ int check_commitment(unsigned char* pk,
                      Commitment* commitment_check){
 
   const int DEM_LEN = commitment_check->kem->length_shared_secret + sizeof(int);
-
   Commitment* commitment = (Commitment*) malloc(sizeof(Commitment));
   init_commitment(commitment_check->kem, commitment);
   init_to_zero(commitment->ciphertext_kem, commitment->kem->length_ciphertext);
