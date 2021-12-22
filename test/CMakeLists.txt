@@ -43,3 +43,4 @@ add_test(NAME test_gake_Classic-McEliece-6688128 COMMAND test_gake 20 Classic-Mc
 add_test(NAME test_gake_Classic-McEliece-6688128f COMMAND test_gake 20 Classic-McEliece-6688128f)
 add_test(NAME test_gake_Classic-McEliece-6960119 COMMAND test_gake 20 Classic-McEliece-6960119)
 add_test(NAME test_gake_Classic-McEliece-6960119f COMMAND test_gake 20 Classic-McEliece-6960119f)
+add_test(NAME test_gake_Classic-McEliece-8192128 COMMAND test_gake 20 Classic-McEliece-8192128)
