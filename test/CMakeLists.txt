@@ -36,3 +36,4 @@ add_test(NAME test_gake_NTRU-HPS-2048-509 COMMAND test_gake 100 NTRU-HPS-2048-50
 add_test(NAME test_gake_NTRU-HPS-2048-677 COMMAND test_gake 100 NTRU-HPS-2048-677)
 add_test(NAME test_gake_NTRU-HPS-4096-821 COMMAND test_gake 100 NTRU-HPS-4096-821)
 add_test(NAME test_gake_Classic-McEliece-348864 COMMAND test_gake 20 Classic-McEliece-348864)
+add_test(NAME test_gake_Classic-McEliece-348864f COMMAND test_gake 20 Classic-McEliece-348864f)
