@@ -1,16 +1,17 @@
 #include "../src/gcwr-ake.h"
 
-#define NUM_ALGOS 3
+#define NUM_ALGOS 6
 
 int main(void) {
 
   char algos[NUM_ALGOS][OQS_KEM_algs_length] = {
     // OQS_KEM_alg_classic_mceliece_6688128,
-    // OQS_KEM_alg_ntru_hps4096821,
-    // OQS_KEM_alg_saber_firesaber,
+    OQS_KEM_alg_ntru_hps4096821,
+    OQS_KEM_alg_saber_firesaber,
     OQS_KEM_alg_kyber_1024,
     OQS_KEM_alg_kyber_768,
-    OQS_KEM_alg_kyber_512
+    OQS_KEM_alg_kyber_512,
+    OQS_KEM_alg_classic_mceliece_348864
   };
 
   for (int i = 0; i < NUM_ALGOS; i++) {
@@ -53,6 +54,8 @@ int main(void) {
     uint8_t *ekA2 = malloc(kem->length_public_key);
     uint8_t *dkA2 = malloc(kem->length_secret_key);
     ake_init(kem, dkA1, ekB1, cA1, kA1, ekA2, dkA2);
+    printf("[U_A] kA1: ");
+    print_hex_short(kA1, kem->length_shared_secret, MAX);
 
     clock_t end_alg_init = times(NULL);
 
@@ -66,6 +69,8 @@ int main(void) {
     uint8_t *kA1_prime = malloc(kem->length_shared_secret);
 
     ake_algA(kem, ekA1, ekA2, dkB1, kB1, kB2, cA1, cB1, cB2, kA1_prime, skB);
+    printf("[U_B] kA1: ");
+    print_hex_short(kA1_prime, kem->length_shared_secret, MAX);
 
     clock_t end_algB = times(NULL);
 

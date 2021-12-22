@@ -300,7 +300,13 @@ void compute_xs_commitments(OQS_KEM* kem, Party* parties, int num_parties, size_
     itoa(i, buf_int);
 
     xor_keys(parties[i].key_right, parties[i].key_left, xi, length);
-    OQS_randombytes(ri, COMMITMENTCOINSBYTES);
+    if (is_mceliece(kem)) {
+      kem->gen_e(ri);
+      OQS_randombytes(ri + kem->length_coins, AES_256_IVEC_LENGTH);
+    } else {
+      OQS_randombytes(ri, COMMITMENTCOINSBYTES);
+    }
+
 
     memcpy(msg, xi, length);
     memcpy(msg + length, &buf_int, sizeof(int));

@@ -14,7 +14,7 @@ int main(int argc, char** argv){
 
   uint8_t verbose = 0;
 
-  if (argc == 3) {
+  if (argc == 4) {
     verbose = 1;
   }
 

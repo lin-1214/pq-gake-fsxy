@@ -9,6 +9,8 @@
 
 #define MAX 16
 
+int is_mceliece(OQS_KEM* kem);
+
 void concat_keys(const uint8_t *key1, const uint8_t *key2, const uint8_t *key3,
                  size_t length, uint8_t *out);
 
