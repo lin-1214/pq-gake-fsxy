@@ -5,16 +5,16 @@
 
 ## Supported algorithms
 
-* Classic-McEliece-348864 (VEC)
-* Classic-McEliece-348864f (VEC)
-* Classic-McEliece-460896 (VEC)
-* Classic-McEliece-460896f (VEC)
-* Classic-McEliece-6688128 (VEC)
-* Classic-McEliece-6688128f (VEC)
-* Classic-McEliece-6960119 (VEC)
-* Classic-McEliece-6960119f (VEC)
-* Classic-McEliece-8192128 (VEC)
-* Classic-McEliece-8192128f (VEC)
+* Classic-McEliece-348864
+* Classic-McEliece-348864f
+* Classic-McEliece-460896
+* Classic-McEliece-460896f
+* Classic-McEliece-6688128
+* Classic-McEliece-6688128f
+* Classic-McEliece-6960119
+* Classic-McEliece-6960119f
+* Classic-McEliece-8192128
+* Classic-McEliece-8192128f
 * Kyber512
 * Kyber768
 * Kyber1024
