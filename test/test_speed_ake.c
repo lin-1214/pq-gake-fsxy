@@ -16,22 +16,26 @@
 #endif
 #include "ds_benchmark.h"
 #include "system_info.h"
+#include "../src/gcwr-ake.h"
 
-int is_mceliece(OQS_KEM* kem);
-
-int is_mceliece(OQS_KEM* kem) {
-  return strstr(kem->method_name, "McEliece") != NULL ? 1 : 0;
-}
-
-static OQS_STATUS kem_speed_wrapper(const char *method_name, uint64_t duration, bool printInfo) {
+static OQS_STATUS ake_speed_wrapper(const char *method_name, uint64_t duration, bool printInfo) {
 
 	OQS_KEM *kem = NULL;
-	uint8_t *public_key = NULL;
-	uint8_t *secret_key = NULL;
-	uint8_t *ciphertext = NULL;
-	uint8_t *shared_secret_e = NULL;
-	uint8_t *shared_secret_d = NULL;
-	uint8_t *coins = NULL;
+  uint8_t *cA1 = NULL;
+  uint8_t *kA1 = NULL;
+  uint8_t *ekA1 = NULL;
+  uint8_t *dkA1 = NULL;
+  uint8_t *ekA2 = NULL;
+  uint8_t *dkA2 = NULL;
+  uint8_t *ekB1 = NULL;
+  uint8_t *dkB1 = NULL;
+  uint8_t *cB1 = NULL;
+  uint8_t *kB1 = NULL;
+  uint8_t *cB2 = NULL;
+  uint8_t *kB2 = NULL;
+  uint8_t *skB = NULL;
+  uint8_t *kA1_prime = NULL;
+  uint8_t *skA = NULL;
 	OQS_STATUS ret = OQS_ERROR;
 
 	kem = OQS_KEM_new(method_name);
@@ -39,41 +43,62 @@ static OQS_STATUS kem_speed_wrapper(const char *method_name, uint64_t duration, 
 		return OQS_SUCCESS;
 	}
 
-	public_key = malloc(kem->length_public_key);
-	secret_key = malloc(kem->length_secret_key);
-	ciphertext = malloc(kem->length_ciphertext);
-	shared_secret_e = malloc(kem->length_shared_secret);
-	shared_secret_d = malloc(kem->length_shared_secret);
-	coins = malloc(kem->length_coins);
+  cA1 = malloc(kem->length_ciphertext);
+  kA1 = malloc(kem->length_shared_secret);
+  ekA2 = malloc(kem->length_public_key);
+  dkA2 = malloc(kem->length_secret_key);
+  cB1 = malloc(kem->length_ciphertext);
+  kB1 = malloc(kem->length_shared_secret);
+  cB2 = malloc(kem->length_ciphertext);
+  kB2 = malloc(kem->length_shared_secret);
+  skB = malloc(kem->length_shared_secret);
+  kA1_prime = malloc(kem->length_shared_secret);
+  skA = malloc(kem->length_shared_secret);
+  ekA1 = malloc(kem->length_public_key);
+  dkA1 = malloc(kem->length_secret_key);
+  ekB1 = malloc(kem->length_public_key);
+  dkB1 = malloc(kem->length_secret_key);
 
-	if ((public_key == NULL) || (secret_key == NULL) || (ciphertext == NULL) || (shared_secret_e == NULL) || (shared_secret_d == NULL) || (coins == NULL)) {
+	if ((cA1 == NULL) ||
+      (kA1 == NULL) ||
+      (ekA2 == NULL) ||
+      (dkA2 == NULL) ||
+      (cB1 == NULL) ||
+      (kB1 == NULL) ||
+      (cB2 == NULL) ||
+      (kB2 == NULL) ||
+      (skB == NULL) ||
+      (kA1_prime == NULL) ||
+      (skA == NULL) ||
+      (ekA1 == NULL) ||
+      (dkA1 == NULL) ||
+      (ekB1 == NULL) ||
+      (dkB1 == NULL)) {
 		fprintf(stderr, "ERROR: malloc failed\n");
 		goto err;
 	}
 
-	printf("%-30s | %10s | %14s | %15s | %10s | %25s | %10s\n", kem->method_name, "", "", "", "", "", "");
-	TIME_OPERATION_SECONDS(
-		OQS_KEM_keypair(kem, public_key, secret_key),
-		"keygen",
-		duration
-	)
+  OQS_KEM_keypair(kem, ekA1, dkA1);
+  OQS_KEM_keypair(kem, ekB1, dkB1);
 
-	TIME_OPERATION_SECONDS(
-		if (is_mceliece(kem)) {
-	    kem->gen_e(coins);
-	  } else {
-	    OQS_randombytes(coins, kem->length_coins);
-	  }
-		OQS_KEM_encaps(kem, ciphertext, shared_secret_e, public_key, coins),
-		"encaps",
-		duration
-	)
+  printf("%-30s | %10s | %14s | %15s | %10s | %25s | %10s\n", kem->method_name, "", "", "", "", "", "");
+  TIME_OPERATION_SECONDS(
+    ake_init(kem, dkA1, ekB1, cA1, kA1, ekA2, dkA2),
+    "init",
+    duration
+  )
 
-	TIME_OPERATION_SECONDS(
-		OQS_KEM_decaps(kem, shared_secret_d, ciphertext, secret_key),
-		"decaps",
-		duration
-	)
+  TIME_OPERATION_SECONDS(
+    ake_algA(kem, ekA1, ekA2, dkB1, kB1, kB2, cA1, cB1, cB2, kA1_prime, skB),
+    "algA",
+    duration
+  )
+
+  TIME_OPERATION_SECONDS(
+    ake_algB(kem, cB1, cB2, dkA1, dkA2, kA1, skA),
+    "algB",
+    duration
+  )
 
 	if (printInfo) {
 		printf("public key bytes: %zu, ciphertext bytes: %zu, secret key bytes: %zu, shared secret key bytes: %zu, NIST level: %d, IND-CCA: %s\n", kem->length_public_key, kem->length_ciphertext, kem->length_secret_key, kem->length_shared_secret, kem->claimed_nist_level, kem->ind_cca ? "Y" : "N");
@@ -86,13 +111,7 @@ err:
 	ret = OQS_ERROR;
 
 cleanup:
-	if (kem != NULL) {
-		OQS_MEM_secure_free(secret_key, kem->length_secret_key);
-		OQS_MEM_secure_free(shared_secret_e, kem->length_shared_secret);
-		OQS_MEM_secure_free(shared_secret_d, kem->length_shared_secret);
-	}
-	OQS_MEM_insecure_free(public_key);
-	OQS_MEM_insecure_free(ciphertext);
+
 	OQS_KEM_free(kem);
 
 	return ret;
@@ -178,13 +197,13 @@ int main(int argc, char **argv) {
 
 	PRINT_TIMER_HEADER
 	if (single_kem != NULL) {
-		rc = kem_speed_wrapper(single_kem->method_name, duration, printKemInfo);
+		rc = ake_speed_wrapper(single_kem->method_name, duration, printKemInfo);
 		if (rc != OQS_SUCCESS) {
 			ret = EXIT_FAILURE;
 		}
 	} else {
 		for (size_t i = 0; i < OQS_KEM_algs_length; i++) {
-			rc = kem_speed_wrapper(OQS_KEM_alg_identifier(i), duration, printKemInfo);
+			rc = ake_speed_wrapper(OQS_KEM_alg_identifier(i), duration, printKemInfo);
 			if (rc != OQS_SUCCESS) {
 				ret = EXIT_FAILURE;
 			}

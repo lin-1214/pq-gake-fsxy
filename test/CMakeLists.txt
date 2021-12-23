@@ -10,6 +10,11 @@ set(TEST_GCWR_AKE_SRCS ../src/gcwr-ake.c test-gcwr-ake.c)
 add_executable(test_gcwr_ake ${TEST_GCWR_AKE_SRCS})
 target_link_libraries(test_gcwr_ake PUBLIC utils gcwr-ake)
 
+set(TEST_SPEED_GCWR_AKE system_info.c test_speed_ake.c)
+add_executable(test_speed_ake ${TEST_SPEED_GCWR_AKE})
+target_link_libraries(test_speed_ake PUBLIC utils gcwr-ake)
+target_link_libraries(test_speed_ake PRIVATE m)
+
 set(TEST_INDCCA ../src/indcca.c test_indcca.c)
 add_executable(test_indcca ${TEST_INDCCA})
 target_link_libraries(test_indcca PUBLIC oqs utils indcca aes256gcm)
@@ -52,3 +57,4 @@ add_test(NAME test_gake_Classic-McEliece-8192128 COMMAND test_gake 20 Classic-Mc
 add_test(NAME test_gake_Classic-McEliece-8192128f COMMAND test_gake 20 Classic-McEliece-8192128f)
 
 add_test(NAME test_speed_kem COMMAND test_speed_kem)
+add_test(NAME test_speed_ake COMMAND test_speed_ake)
