@@ -39,5 +39,5 @@ git checkout coins
 mkdir -p build
 cd build
 rm -rf *
-cmake -GNinja -DOQS_MINIMAL_BUILD="${ENABLED_ALGS}" ..
+cmake -GNinja -DOQS_DIST_BUILD=ON -DOQS_MINIMAL_BUILD="${ENABLED_ALGS}" ..
 ninja

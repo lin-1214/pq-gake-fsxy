@@ -22,6 +22,11 @@ set(TEST_GAKE ../src/gake.c ../src/commitment.c test_gake.c)
 add_executable(test_gake ${TEST_GAKE})
 target_link_libraries(test_gake PUBLIC gake commitment)
 
+set(TEST_SPEED_KEM system_info.c test_speed_kem.c)
+add_executable(test_speed_kem ${TEST_SPEED_KEM})
+target_link_libraries(test_speed_kem PUBLIC oqs ${OPENSSL_CRYPTO_LIBRARY})
+target_link_libraries(test_speed_kem PRIVATE m)
+
 add_test(NAME aes256gcm COMMAND test_aes256gcm)
 add_test(NAME test_gcwr_ake COMMAND test_gcwr_ake)
 add_test(NAME test_indcca COMMAND test_indcca)
@@ -45,3 +50,5 @@ add_test(NAME test_gake_Classic-McEliece-6960119 COMMAND test_gake 20 Classic-Mc
 add_test(NAME test_gake_Classic-McEliece-6960119f COMMAND test_gake 20 Classic-McEliece-6960119f)
 add_test(NAME test_gake_Classic-McEliece-8192128 COMMAND test_gake 20 Classic-McEliece-8192128)
 add_test(NAME test_gake_Classic-McEliece-8192128f COMMAND test_gake 20 Classic-McEliece-8192128f)
+
+add_test(NAME test_speed_kem COMMAND test_speed_kem)
