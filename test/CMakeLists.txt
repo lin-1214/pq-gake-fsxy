@@ -61,6 +61,8 @@ add_test(NAME test_gake_Classic-McEliece-6960119f COMMAND test_gake 20 Classic-M
 add_test(NAME test_gake_Classic-McEliece-8192128 COMMAND test_gake 20 Classic-McEliece-8192128)
 add_test(NAME test_gake_Classic-McEliece-8192128f COMMAND test_gake 20 Classic-McEliece-8192128f)
 
-add_test(NAME test_speed_kem COMMAND test_speed_kem)
-add_test(NAME test_speed_ake COMMAND test_speed_ake)
-add_test(NAME test_speed_gake COMMAND test_speed_gake 10)
+add_test(NAME test_speed_kem COMMAND test_speed_kem > kem.txt)
+add_test(NAME test_speed_ake COMMAND test_speed_ake > ake.txt)
+add_test(NAME test_speed_gake COMMAND test_speed_gake 2 > gake_2.txt)
+add_test(NAME test_speed_gake COMMAND test_speed_gake 4 > gake_4.txt)
+add_test(NAME test_speed_gake COMMAND test_speed_gake 8 > gake_8.txt)

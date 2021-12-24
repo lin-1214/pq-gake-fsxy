@@ -58,6 +58,21 @@ jobs:
         path: ./${{ matrix.config.artifact }}
         name: ${{ matrix.config.artifact }}
 
+    - name: Generate CSVs
+      working-directory: build
+      run: |
+        sudo apt install nodejs npm
+        npm i parse-markdown-table-cli
+        bash convert_tables.sh
+
+    - name: Archive results
+      working-directory: build
+      uses: actions/upload-artifact@v2
+      with:
+        name: results
+        path: ./results
+        retention-days: 7
+
   release:
     if: contains(github.ref, 'tags/v')
     runs-on: ubuntu-20.04
