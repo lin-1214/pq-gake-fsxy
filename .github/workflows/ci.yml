@@ -63,7 +63,9 @@ jobs:
       run: |
         sudo apt install -y nodejs npm
         npm i parse-markdown-table-cli
-        cd build/graphics && bash convert_tables.sh
+        echo `pwd`
+        echo `ls -lah .`
+        cd graphics && bash convert_tables.sh
 
     - name: Archive results
       uses: actions/upload-artifact@v2
