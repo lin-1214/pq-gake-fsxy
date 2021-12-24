@@ -61,7 +61,7 @@ jobs:
     - name: Generate CSVs
       working-directory: build
       run: |
-        sudo apt install nodejs npm
+        sudo apt install -y nodejs npm
         npm i parse-markdown-table-cli
         bash convert_tables.sh
 
