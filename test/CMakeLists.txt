@@ -62,7 +62,7 @@ add_test(NAME test_gake_Classic-McEliece-8192128 COMMAND test_gake 20 Classic-Mc
 add_test(NAME test_gake_Classic-McEliece-8192128f COMMAND test_gake 20 Classic-McEliece-8192128f)
 
 add_test(NAME test_speed_kem COMMAND sh -c "$<TARGET_FILE:test_speed_kem> > ../kem.txt")
-add_test(NAME test_speed_kem COMMAND sh -c "$<TARGET_FILE:test_speed_ake> > ../ake.txt")
+add_test(NAME test_speed_ake COMMAND sh -c "$<TARGET_FILE:test_speed_ake> > ../ake.txt")
 add_test(NAME test_speed_gake_2 COMMAND test_speed_gake 2 > gake_2.txt)
 add_test(NAME test_speed_gake_4 COMMAND test_speed_gake 4 > gake_4.txt)
 add_test(NAME test_speed_gake_8 COMMAND test_speed_gake 8 > gake_8.txt)
