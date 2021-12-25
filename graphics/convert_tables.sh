@@ -19,7 +19,7 @@ do
     do
       type_gake="${type}_${N}"
       echo $type_gake
-      cat ${FOLDER}/${type_gake}.txt | sed '1,14d;$d' | ${FOLDER}/node_modules/parse-markdown-table-cli/bin | node json2csv.js ${type_gake} ${N} > ${FOLDER}/${OUTPUT}/${type_gake}.csv
+      cat ${FOLDER}/${type_gake}.txt | sed '1,14d;$d' | ${FOLDER}/node_modules/parse-markdown-table-cli/bin | node json2csv.js ${type} ${N} > ${FOLDER}/${OUTPUT}/${type_gake}.csv
       cp ${FOLDER}/${type_gake}.txt ${FOLDER}/${OUTPUT}
     done
   else
