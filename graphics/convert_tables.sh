@@ -28,3 +28,5 @@ do
     cp ${FOLDER}/${type}.txt ${FOLDER}/${OUTPUT}
   fi
 done
+
+awk '(NR == 1) || (FNR > 1)' ${FOLDER}/${OUTPUT}/gake_*.csv > ${FOLDER}/${OUTPUT}/gake.csv
