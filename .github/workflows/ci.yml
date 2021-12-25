@@ -152,12 +152,11 @@ jobs:
     - name: Download all workflow run artifacts
       uses: actions/download-artifact@v2
 
-    - name: Upload results
+    - name: Compress results
       run: |
         zip -r results.zip results
 
     - name: Upload to Release
-      id: upload_to_release
       uses: actions/upload-release-asset@v1.0.1
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
