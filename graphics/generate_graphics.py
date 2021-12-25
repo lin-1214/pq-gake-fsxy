@@ -9,8 +9,69 @@ import sys
 import signal
 from pathlib import Path
 from matplotlib import pyplot as plt
+from matplotlib.colors import LinearSegmentedColormap
+
+def plot_heatmap_level(data, config):
+
+    cmap = LinearSegmentedColormap.from_list('RedGreenRed', ['lime', 'crimson'])
+
+    LEVELS = [config["L1"], config["L3"], config["L5"]]
+    LEVELS_LABELS = [1,3,5]
+
+    def conditions(s):
+        if (s['algorithm'] in (LEVELS[0])):
+            return "Level 1"
+        if (s['algorithm'] in (LEVELS[1])):
+            return "Level 3"
+        if (s['algorithm'] in (LEVELS[2])):
+            return "Level 5"
+        else:
+            return ""
+
+    fig, axes2 = plt.subplots(1, 3, figsize=(30, 18))
+    fig.suptitle('Operation heatmap', fontsize=30)
+    fig.subplots_adjust(hspace=0.75, wspace=0.4)
+
+    df = data.copy()
+    data["operation"] = data["type"].astype(str) + "-" + data["operation"].astype(str)
+    data["level"] = data.apply(conditions, axis=1)
+
+    for (j, level) in enumerate(LEVELS):
+        df = data[data['algorithm'].isin(level)]
+        df2 = df.reset_index(drop = True)
+        df2 = df[['algorithm', 'operation', 'mean_cpu_cycles']]
+        df2['mean_cpu_cycles'] = np.log(df2['mean_cpu_cycles'])
+        df2 = df2.pivot(index='operation', columns='algorithm', values='mean_cpu_cycles')
+
+        grid_kws = {"height_ratios": (.9, .1), "hspace": .001}
+        f, (axes, cbar_ax) = plt.subplots(2, gridspec_kw=grid_kws)
+        ax = sns.heatmap(ax=axes2[j],
+                         data=df2,
+                         annot=True,
+                         fmt="0.2f",
+                         linewidths=0.5,
+                         cmap=cmap,
+                         # square=True,
+                         cbar_ax=cbar_ax,
+                         cbar_kws={"orientation": "horizontal"})
+
+        axes2[j].set_title("Level {}".format(LEVELS_LABELS[j]), fontsize="x-large")
+        axes2[j].set_xlabel('', fontsize="x-large")
+        axes2[j].set_ylabel('Operation', fontsize="x-large")
+        axes2[j].tick_params(axis='y', rotation=0)
+
+
+    fig.suptitle('Operations heatmap', fontsize=30)
+    plt.yticks(rotation=0)
+
+    figname = "{}/{}/cycles_operations.png".format(config["FOLDER"], config["OUTPUT_FOLDER"])
+    fig.savefig(figname)
+    print("Saved file to {}".format(figname), flush=True)
 
 def plot_heatmap(data, config):
+
+    cmap = LinearSegmentedColormap.from_list('RedGreenRed', ['lime', 'crimson'])
+
 
     df = data.copy()
     df["operation"] = data["type"].astype(str) + "-" + data["operation"].astype(str)
@@ -18,10 +79,24 @@ def plot_heatmap(data, config):
     df['mean_cpu_cycles'] = np.log(df['mean_cpu_cycles'])
     df = df.pivot(index='operation', columns='algorithm', values='mean_cpu_cycles')
     print(df)
-    fig, axes = plt.subplots(figsize=(25,25))
-    fig.suptitle('Operations', fontsize=30)
 
-    sns.heatmap(ax=axes, data=df)
+    grid_kws = {"height_ratios": (.9, .01), "hspace": .001}
+    fig, (axes, cbar_ax) = plt.subplots(2, gridspec_kw=grid_kws, figsize=(15,15))
+    ax = sns.heatmap(ax=axes,
+                     data=df,
+                     annot=True,
+                     fmt="0.2f",
+                     linewidths=0.5,
+                     cmap=cmap,
+                     square=True,
+                     cbar_ax=cbar_ax,
+                     cbar_kws={"orientation": "horizontal"})
+
+    fig.suptitle('Operations heatmap', fontsize=30)
+    axes.set_xlabel('', fontsize="x-large")
+    axes.set_ylabel('Operation', fontsize="x-large")
+
+    plt.yticks(rotation=0)
 
     figname = "{}/{}/cycles_operations.png".format(config["FOLDER"], config["OUTPUT_FOLDER"])
     fig.savefig(figname)
@@ -295,18 +370,19 @@ def main():
     data_gake = pd.read_csv(gake_file)
     data_commitment = pd.read_csv(commitment_file)
 
-    data_concat = pd.concat([data_ake, data_kem, data_commitment])
+    data_concat = pd.concat([data_kem, data_commitment, data_ake])
 
     # plot_total_time_by_time(data, config)
     # plot_total_time_by_round(data, config)
     # plot_speed_commitments(data_speed, config)
     # plot_speed_2_ake(data_speed, config)
 
-    plot_speed_kem(data_kem, config)
-    plot_speed_ake(data_ake, config)
-    plot_speed_commitment(data_commitment, config)
-    plot_speed_gake(data_gake, config)
-    plot_heatmap(data_concat, config)
+    # plot_speed_kem(data_kem, config)
+    # plot_speed_ake(data_ake, config)
+    # plot_speed_commitment(data_commitment, config)
+    # plot_speed_gake(data_gake, config)
+    # plot_heatmap(data_concat, config)
+    plot_heatmap_level(data_concat, config)
 
 if __name__ == '__main__':
     main()
