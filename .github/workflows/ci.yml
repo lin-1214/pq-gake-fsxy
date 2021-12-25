@@ -122,11 +122,8 @@ jobs:
     needs: release
 
     steps:
-    - name: Download artifact
-      uses: actions/download-artifact@v1
-      with:
-        name: ${{ matrix.config.artifact }}
-        path: ./
+    - name: Download all workflows
+      uses: actions/download-artifact@v2
 
     - name: Download URL
       uses: actions/download-artifact@v1
@@ -148,9 +145,6 @@ jobs:
         asset_path: ./${{ matrix.config.artifact }}
         asset_name: ${{ matrix.config.artifact }}
         asset_content_type: application/x-gtar
-
-    - name: Download all workflow run artifacts
-      uses: actions/download-artifact@v2
 
     - name: Compress results
       run: |
