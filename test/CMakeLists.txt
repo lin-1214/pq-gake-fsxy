@@ -23,6 +23,11 @@ set(TEST_COMMITMENT ../src/commitment.c test_commitment.c)
 add_executable(test_commitment ${TEST_COMMITMENT})
 target_link_libraries(test_commitment PUBLIC oqs utils commitment)
 
+set(TEST_SPEED_COMMITMENT ../src/commitment.c system_info.c test_speed_commitment.c)
+add_executable(test_speed_commitment ${TEST_SPEED_COMMITMENT})
+target_link_libraries(test_speed_commitment PUBLIC oqs utils commitment)
+target_link_libraries(test_speed_commitment PRIVATE m)
+
 set(TEST_GAKE ../src/gake.c ../src/commitment.c test_gake.c)
 add_executable(test_gake ${TEST_GAKE})
 target_link_libraries(test_gake PUBLIC gake commitment)
@@ -63,6 +68,7 @@ add_test(NAME test_gake_Classic-McEliece-8192128f COMMAND test_gake 20 Classic-M
 
 add_test(NAME test_speed_kem COMMAND sh -c "$<TARGET_FILE:test_speed_kem> > ../kem.txt")
 add_test(NAME test_speed_ake COMMAND sh -c "$<TARGET_FILE:test_speed_ake> > ../ake.txt")
+add_test(NAME test_speed_commitment COMMAND sh -c "$<TARGET_FILE:test_speed_commitment> > ../commitment.txt")
 add_test(NAME test_speed_gake_2 COMMAND sh -c "$<TARGET_FILE:test_speed_gake> 2 > ../gake_2.txt")
 add_test(NAME test_speed_gake_4 COMMAND sh -c "$<TARGET_FILE:test_speed_gake> 4 > ../gake_4.txt")
 add_test(NAME test_speed_gake_8 COMMAND sh -c "$<TARGET_FILE:test_speed_gake> 8 > ../gake_8.txt")

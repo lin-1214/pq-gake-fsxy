@@ -6,6 +6,7 @@ OUTPUT="results"
 TYPES=(
   "ake"
   "kem"
+  "commitment"
   "gake"
 )
 Ns=(2 4 8)

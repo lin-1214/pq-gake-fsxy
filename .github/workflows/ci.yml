@@ -66,6 +66,13 @@ jobs:
         ls -lah .
         cd ../graphics && bash convert_tables.sh
 
+    - name: Compute graphics
+      run: |
+        virtualenv --python=python3 venv
+        source venv/bin/activate
+        pip install -r graphics/requirements.txt
+        python graphics/generate_graphics.py graphs/config.yaml
+
     - name: Archive results
       uses: actions/upload-artifact@v2
       with:
