@@ -10,64 +10,23 @@ import signal
 from pathlib import Path
 from matplotlib import pyplot as plt
 
-# def plot_total_time_by_time(data, config):
-#
-#     fig, axes = plt.subplots(2,4, figsize=(25,10), sharey=False)
-#     fig.suptitle('Total time')
-#     fig.subplots_adjust(hspace=0.5, wspace=0.5)
-#
-#     for (j, impl) in enumerate(IMPLEMENTATIONS):
-#         df = data[data['implementation'] == impl]
-#         for (i, sec) in enumerate(SECURITY):
-#             df2 = df[df["security"] == sec]
-#             df2 = df2[['parties', 'type', 'time_total']]
-#
-#             if i == 0:
-#                 axes[j,i].text(1, 0.5, impl, horizontalalignment='center', verticalalignment='center', transform=axes[j,i].transAxes)
-#                 axes[j,i].text(0, 0.5, 'Implementation', horizontalalignment='center', verticalalignment='center', transform=axes[j,i].transAxes)
-#                 axes[j,i].axis('off')
-#
-#
-#             sns.lineplot(ax=axes[j,i+1], x="parties", y="time_total", hue="type", data=df2)
-#             axes[j,i+1].set(xlabel='Number of parties', ylabel='Total time (seconds)')
-#             axes[j,i+1].set_title('Security level: {}'.format(sec))
-#             axes[j,i+1].legend(loc='upper left')
-#
-#
-#     figname = "{}/totaltime.png".format(config["OUTPUT_FOLDER"])
-#     fig.savefig(figname)
-#     print("Saved file to {}".format(figname), flush=True)
-#
-# def plot_total_time_by_round(data, config):
-#
-#     fig, axes = plt.subplots(2,4, figsize=(25,10))
-#     fig.suptitle('Percentage of total time per round')
-#     fig.subplots_adjust(hspace=0.5, wspace=0.5)
-#
-#     for (j, impl) in enumerate(IMPLEMENTATIONS):
-#         df = data[data['implementation'] == impl]
-#         for (i, sec) in enumerate(SECURITY):
-#             df2 = df[df["security"] == sec]
-#             df2 = df2[['type', 'percentage_init', 'percentage_round12', 'percentage_round3', 'percentage_round4']]
-#             df2.columns = ['type', 'Init', 'Round 1-2', 'Round 3', 'Round 4']
-#             df2 = df2.melt(id_vars=["type"], var_name="Round", value_name="Percentage")
-#
-#             # with pd.option_context('display.max_rows', None, 'display.max_columns', None):
-#             #     print(df2)
-#
-#             if i == 0:
-#                 axes[j,i].text(1, 0.5, impl, horizontalalignment='center', verticalalignment='center', transform=axes[j,i].transAxes)
-#                 axes[j,i].text(0, 0.5, 'Implementation', horizontalalignment='center', verticalalignment='center', transform=axes[j,i].transAxes)
-#                 axes[j,i].axis('off')
-#
-#             sns.boxplot(ax=axes[j,i+1], x="Round", y="Percentage", hue="type", data=df2)
-#             axes[j,i+1].set_title('Security level: {}'.format(sec))
-#             axes[j,i+1].legend(loc='upper left')
-#
-#     figname = "{}/totaltime_round.png".format(config["OUTPUT_FOLDER"])
-#     fig.savefig(figname)
-#     print("Saved file to {}".format(figname), flush=True)
-#
+def plot_heatmap(data, config):
+
+    df = data.copy()
+    df["operation"] = data["type"].astype(str) + "-" + data["operation"].astype(str)
+    df = df[['algorithm', 'operation', 'mean_cpu_cycles']]
+    df['mean_cpu_cycles'] = np.log(df['mean_cpu_cycles'])
+    df = df.pivot(index='operation', columns='algorithm', values='mean_cpu_cycles')
+    print(df)
+    fig, axes = plt.subplots(figsize=(25,25))
+    fig.suptitle('Operations', fontsize=30)
+
+    sns.heatmap(ax=axes, data=df)
+
+    figname = "{}/{}/cycles_operations.png".format(config["FOLDER"], config["OUTPUT_FOLDER"])
+    fig.savefig(figname)
+    print("Saved file to {}".format(figname), flush=True)
+
 def plot_speed_commitment(data, config):
 
     fig, axes = plt.subplots(3,4, figsize=(25,25))
@@ -336,15 +295,18 @@ def main():
     data_gake = pd.read_csv(gake_file)
     data_commitment = pd.read_csv(commitment_file)
 
+    data_concat = pd.concat([data_ake, data_kem, data_commitment])
+
     # plot_total_time_by_time(data, config)
     # plot_total_time_by_round(data, config)
     # plot_speed_commitments(data_speed, config)
     # plot_speed_2_ake(data_speed, config)
 
-    plot_speed_kem(data_kem, config)
-    plot_speed_ake(data_ake, config)
-    plot_speed_commitment(data_commitment, config)
-    plot_speed_gake(data_gake, config)
+    # plot_speed_kem(data_kem, config)
+    # plot_speed_ake(data_ake, config)
+    # plot_speed_commitment(data_commitment, config)
+    # plot_speed_gake(data_gake, config)
+    plot_heatmap(data_concat, config)
 
 if __name__ == '__main__':
     main()

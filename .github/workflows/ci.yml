@@ -74,7 +74,7 @@ jobs:
         virtualenv --python=python3 venv
         source venv/bin/activate
         pip install -r graphics/requirements.txt
-        python graphics/generate_graphics.py graphs/config.yaml
+        python graphics/generate_graphics.py graphics/config.yaml
 
     - name: Archive results
       uses: actions/upload-artifact@v2
