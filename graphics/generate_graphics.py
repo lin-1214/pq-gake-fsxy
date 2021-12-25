@@ -11,6 +11,60 @@ from pathlib import Path
 from matplotlib import pyplot as plt
 from matplotlib.colors import LinearSegmentedColormap
 
+
+def plot_scalability_level(data, config):
+
+    LEVELS = [config["L1"], config["L3"], config["L5"]]
+    LEVELS_LABELS = [1,3,5]
+
+    def conditions(s):
+        if (s['algorithm'] in (LEVELS[0])):
+            return "Level 1"
+        if (s['algorithm'] in (LEVELS[1])):
+            return "Level 3"
+        if (s['algorithm'] in (LEVELS[2])):
+            return "Level 5"
+        else:
+            return ""
+
+    fig, axes = plt.subplots(3, figsize=(15,15))
+    fig.suptitle('Scalability', fontsize=30)
+    fig.subplots_adjust(hspace=0.75, wspace=0.4)
+
+    for (j, level) in enumerate(LEVELS):
+        df = data[data['algorithm'].isin(level)]
+
+        df2 = df[['algorithm', 'mean_cpu_cycles', 'N', 'operation']]
+        print(data)
+        df2 = df2.groupby(['algorithm','N'])['mean_cpu_cycles'].sum().reset_index()
+        print(df2)
+        sns.lineplot(ax=axes[j], x="N", y="mean_cpu_cycles", hue="algorithm", data=df2)
+        axes[j].set_title("Level {}".format(LEVELS_LABELS[j]), fontsize="x-large")
+        axes[j].set_xlabel('Number of parties', fontsize="x-large")
+        axes[j].set_ylabel('CPU Cycles', fontsize="x-large")
+
+        figname = "{}/{}/scalability_level.png".format(config["FOLDER"], config["OUTPUT_FOLDER"])
+        fig.savefig(figname)
+        print("Saved file to {}".format(figname), flush=True)
+
+def plot_scalability(data, config):
+
+    fig, axes = plt.subplots(1, figsize=(25,25))
+    fig.suptitle('Scalability', fontsize=30)
+    fig.subplots_adjust(hspace=0.75, wspace=0.4)
+
+    df2 = data[['algorithm', 'mean_cpu_cycles', 'N', 'operation']]
+    print(data)
+    df2 = df2.groupby(['algorithm','N'])['mean_cpu_cycles'].sum().reset_index()
+    print(df2)
+    sns.lineplot(ax=axes, x="N", y="mean_cpu_cycles", hue="algorithm", data=df2)
+    axes.set_xlabel('Number of parties', fontsize="x-large")
+    axes.set_ylabel('CPU Cycles', fontsize="x-large")
+
+    figname = "{}/{}/scalability.png".format(config["FOLDER"], config["OUTPUT_FOLDER"])
+    fig.savefig(figname)
+    print("Saved file to {}".format(figname), flush=True)
+
 def plot_heatmap_level(data, config):
 
     cmap = LinearSegmentedColormap.from_list('RedGreenRed', ['lime', 'crimson'])
@@ -372,17 +426,14 @@ def main():
 
     data_concat = pd.concat([data_kem, data_commitment, data_ake])
 
-    # plot_total_time_by_time(data, config)
-    # plot_total_time_by_round(data, config)
-    # plot_speed_commitments(data_speed, config)
-    # plot_speed_2_ake(data_speed, config)
-
     plot_speed_kem(data_kem, config)
     plot_speed_ake(data_ake, config)
     plot_speed_commitment(data_commitment, config)
     plot_speed_gake(data_gake, config)
     plot_heatmap(data_concat, config)
     plot_heatmap_level(data_concat, config)
+    plot_scalability(data_gake, config)
+    plot_scalability_level(data_gake, config)
 
 if __name__ == '__main__':
     main()
