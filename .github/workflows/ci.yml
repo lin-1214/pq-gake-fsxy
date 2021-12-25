@@ -18,12 +18,6 @@ jobs:
               os: ubuntu-20.04,
               build_type: "Release", cc: "gcc"
             }
-          # - {
-          #     name: "macOS Latest Clang",
-          #     artifact: "macOS.tar.xz",
-          #     os: macos-latest,
-          #     build_type: "Release", cc: "clang", cxx: "clang++"
-          #   }
     steps:
     - uses: actions/checkout@v1
 
@@ -154,3 +148,21 @@ jobs:
         asset_path: ./${{ matrix.config.artifact }}
         asset_name: ${{ matrix.config.artifact }}
         asset_content_type: application/x-gtar
+
+    - name: Download all workflow run artifacts
+      uses: actions/download-artifact@v2
+
+    - name: Upload results
+      run: |
+        zip -r results.zip results
+
+    - name: Upload to Release
+      id: upload_to_release
+      uses: actions/upload-release-asset@v1.0.1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        upload_url: ${{ steps.set_upload_url.outputs.upload_url }}
+        asset_path: ./results.zip
+        asset_name: ./results.zip
+        asset_content_type: application/zip
