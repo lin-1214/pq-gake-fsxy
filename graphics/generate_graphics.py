@@ -377,11 +377,11 @@ def main():
     # plot_speed_commitments(data_speed, config)
     # plot_speed_2_ake(data_speed, config)
 
-    # plot_speed_kem(data_kem, config)
-    # plot_speed_ake(data_ake, config)
-    # plot_speed_commitment(data_commitment, config)
-    # plot_speed_gake(data_gake, config)
-    # plot_heatmap(data_concat, config)
+    plot_speed_kem(data_kem, config)
+    plot_speed_ake(data_ake, config)
+    plot_speed_commitment(data_commitment, config)
+    plot_speed_gake(data_gake, config)
+    plot_heatmap(data_concat, config)
     plot_heatmap_level(data_concat, config)
 
 if __name__ == '__main__':
