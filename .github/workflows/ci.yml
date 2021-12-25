@@ -66,6 +66,9 @@ jobs:
         ls -lah .
         cd ../graphics && bash convert_tables.sh
 
+    - name: Download dependencies
+      run: sudo apt install python3 virtualenv
+
     - name: Compute graphics
       run: |
         virtualenv --python=python3 venv
