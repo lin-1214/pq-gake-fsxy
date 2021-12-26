@@ -9,8 +9,7 @@ TYPES=(
   "commitment"
   "gake"
 )
-# Ns=(2 4 8 16 32 64 128)
-Ns=(2 4)
+Ns=(2 4 8 16 32 64 128 256 512)
 
 mkdir -p ${FOLDER}/${OUTPUT}
 
