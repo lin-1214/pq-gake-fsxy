@@ -144,6 +144,9 @@ jobs:
         upload_url=`cat ./upload_url`
         echo ::set-output name=upload_url::$upload_url
 
+    - name: Show files
+      run: ls -lah .
+
     - name: Upload to Release
       id: upload_to_release
       uses: actions/upload-release-asset@v1.0.1
