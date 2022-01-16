@@ -71,8 +71,10 @@ jobs:
     - name: Run tests
       run: |
         mkdir -p build build/results
+        ls -lah .
         cd build
-        tar -xvf ./${{ matrix.config.artifact }}
+        ls -lah .
+        tar -zxvf ./${{ matrix.config.artifact }}
         cd ./${{ matrix.config.artifact }}
         bash ../graphics/run_tests.sh
 
