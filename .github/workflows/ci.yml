@@ -74,7 +74,7 @@ jobs:
         ls -lah .
         mv ./Linux build
         cd ./build/Linux
-        bash ../graphics/run_tests.sh
+        bash ../../graphics/run_tests.sh
 
     - name: Generate CSVs
       working-directory: build
