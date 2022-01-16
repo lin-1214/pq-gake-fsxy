@@ -14,7 +14,7 @@ jobs:
         config:
           - {
               name: "Ubuntu Latest GCC",
-              artifact: "Linux.tar.xz",
+              artifact: "Linux",
               os: ubuntu-20.04,
               build_type: "Release", cc: "gcc"
             }
@@ -42,15 +42,15 @@ jobs:
       shell: bash
       run: cd build && ctest
 
-    - name: Pack
-      working-directory: build
-      run: tar cJfv ../${{ matrix.config.artifact }} bin lib
-
-    - name: Upload
-      uses: actions/upload-artifact@v1
+    - name: Archive binaries
+      uses: actions/upload-artifact@v2
       with:
-        path: ./${{ matrix.config.artifact }}
         name: ${{ matrix.config.artifact }}
+        path: |
+          ./build/bin/*
+          ./build/lib/*
+        retention-days: 7
+        if-no-files-found: error
 
 
   tests:
@@ -74,7 +74,6 @@ jobs:
         ls -lah .
         cd build
         ls -lah .
-        tar -zxvf ./${{ matrix.config.artifact }}
         cd ./${{ matrix.config.artifact }}
         bash ../graphics/run_tests.sh
 
