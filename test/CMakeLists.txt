@@ -65,12 +65,3 @@ add_test(NAME test_gake_Classic-McEliece-6960119 COMMAND test_gake 20 Classic-Mc
 add_test(NAME test_gake_Classic-McEliece-6960119f COMMAND test_gake 20 Classic-McEliece-6960119f)
 add_test(NAME test_gake_Classic-McEliece-8192128 COMMAND test_gake 20 Classic-McEliece-8192128)
 add_test(NAME test_gake_Classic-McEliece-8192128f COMMAND test_gake 20 Classic-McEliece-8192128f)
-
-add_test(NAME test_speed_kem COMMAND sh -c "$<TARGET_FILE:test_speed_kem> > ../kem.txt")
-add_test(NAME test_speed_ake COMMAND sh -c "$<TARGET_FILE:test_speed_ake> > ../ake.txt")
-add_test(NAME test_speed_commitment COMMAND sh -c "$<TARGET_FILE:test_speed_commitment> > ../commitment.txt")
-
-set(Ns 2 4 8 16 32 64 128 256)
-foreach(N IN LISTS Ns)
-  add_test(NAME test_speed_gake_${N} COMMAND sh -c "$<TARGET_FILE:test_speed_gake> ${N} > ../gake_${N}.txt")
-endforeach()

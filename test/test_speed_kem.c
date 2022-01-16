@@ -23,7 +23,7 @@ int is_mceliece(OQS_KEM* kem) {
   return strstr(kem->method_name, "McEliece") != NULL ? 1 : 0;
 }
 
-static OQS_STATUS kem_speed_wrapper(const char *method_name, uint64_t duration, bool printInfo) {
+static OQS_STATUS kem_speed_wrapper(const char *method_name, int iterations, bool printInfo) {
 
 	OQS_KEM *kem = NULL;
 	uint8_t *public_key = NULL;
@@ -52,13 +52,13 @@ static OQS_STATUS kem_speed_wrapper(const char *method_name, uint64_t duration, 
 	}
 
 	printf("%-30s | %10s | %14s | %15s | %10s | %25s | %10s\n", kem->method_name, "", "", "", "", "", "");
-	TIME_OPERATION_SECONDS(
+	TIME_OPERATION_ITERATIONS(
 		OQS_KEM_keypair(kem, public_key, secret_key),
 		"keygen",
-		duration
+		iterations
 	)
 
-	TIME_OPERATION_SECONDS(
+	TIME_OPERATION_ITERATIONS(
 		if (is_mceliece(kem)) {
 	    kem->gen_e(coins);
 	  } else {
@@ -66,13 +66,13 @@ static OQS_STATUS kem_speed_wrapper(const char *method_name, uint64_t duration, 
 	  }
 		OQS_KEM_encaps(kem, ciphertext, shared_secret_e, public_key, coins),
 		"encaps",
-		duration
+		iterations
 	)
 
-	TIME_OPERATION_SECONDS(
+	TIME_OPERATION_ITERATIONS(
 		OQS_KEM_decaps(kem, shared_secret_d, ciphertext, secret_key),
 		"decaps",
-		duration
+		iterations
 	)
 
 	if (printInfo) {
@@ -117,7 +117,7 @@ int main(int argc, char **argv) {
 	OQS_STATUS rc;
 
 	bool printUsage = false;
-	uint64_t duration = 3;
+	uint64_t iterations = 10000;
 	bool printKemInfo = false;
 
 	OQS_KEM *single_kem = NULL;
@@ -132,10 +132,10 @@ int main(int argc, char **argv) {
 			} else {
 				return EXIT_FAILURE;
 			}
-		} else if ((strcmp(argv[i], "--duration") == 0) || (strcmp(argv[i], "-d") == 0)) {
+		} else if ((strcmp(argv[i], "--iterations") == 0) || (strcmp(argv[i], "-d") == 0)) {
 			if (i < argc - 1) {
-				duration = (uint64_t)strtol(argv[i + 1], NULL, 10);
-				if (duration > 0) {
+				iterations = (uint64_t)strtol(argv[i + 1], NULL, 10);
+				if (iterations > 0) {
 					i += 1;
 					continue;
 				}
@@ -160,7 +160,7 @@ int main(int argc, char **argv) {
 		fprintf(stderr, "\n");
 		fprintf(stderr, "<options>\n");
 		fprintf(stderr, "--algs             Print supported algorithms and terminate\n");
-		fprintf(stderr, "--duration n\n");
+		fprintf(stderr, "--iterations n\n");
 		fprintf(stderr, " -d n              Run each speed test for approximately n seconds, default n=3\n");
 		fprintf(stderr, "--help\n");
 		fprintf(stderr, " -h                Print usage\n");
@@ -178,13 +178,13 @@ int main(int argc, char **argv) {
 
 	PRINT_TIMER_HEADER
 	if (single_kem != NULL) {
-		rc = kem_speed_wrapper(single_kem->method_name, duration, printKemInfo);
+		rc = kem_speed_wrapper(single_kem->method_name, iterations, printKemInfo);
 		if (rc != OQS_SUCCESS) {
 			ret = EXIT_FAILURE;
 		}
 	} else {
 		for (size_t i = 0; i < OQS_KEM_algs_length; i++) {
-			rc = kem_speed_wrapper(OQS_KEM_alg_identifier(i), duration, printKemInfo);
+			rc = kem_speed_wrapper(OQS_KEM_alg_identifier(i), iterations, printKemInfo);
 			if (rc != OQS_SUCCESS) {
 				ret = EXIT_FAILURE;
 			}

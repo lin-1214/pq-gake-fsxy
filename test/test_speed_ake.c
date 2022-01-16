@@ -18,7 +18,7 @@
 #include "system_info.h"
 #include "../src/gcwr-ake.h"
 
-static OQS_STATUS ake_speed_wrapper(const char *method_name, uint64_t duration, bool printInfo) {
+static OQS_STATUS ake_speed_wrapper(const char *method_name, int iterations, bool printInfo) {
 
 	OQS_KEM *kem = NULL;
   uint8_t *cA1 = NULL;
@@ -82,22 +82,22 @@ static OQS_STATUS ake_speed_wrapper(const char *method_name, uint64_t duration, 
   OQS_KEM_keypair(kem, ekB1, dkB1);
 
   printf("%-30s | %10s | %14s | %15s | %10s | %25s | %10s\n", kem->method_name, "", "", "", "", "", "");
-  TIME_OPERATION_SECONDS(
+  TIME_OPERATION_ITERATIONS(
     ake_init(kem, dkA1, ekB1, cA1, kA1, ekA2, dkA2),
     "init",
-    duration
+    iterations
   )
 
-  TIME_OPERATION_SECONDS(
+  TIME_OPERATION_ITERATIONS(
     ake_algA(kem, ekA1, ekA2, dkB1, kB1, kB2, cA1, cB1, cB2, kA1_prime, skB),
     "algA",
-    duration
+    iterations
   )
 
-  TIME_OPERATION_SECONDS(
+  TIME_OPERATION_ITERATIONS(
     ake_algB(kem, cB1, cB2, dkA1, dkA2, kA1, skA),
     "algB",
-    duration
+    iterations
   )
 
 	if (printInfo) {
@@ -136,7 +136,7 @@ int main(int argc, char **argv) {
 	OQS_STATUS rc;
 
 	bool printUsage = false;
-	uint64_t duration = 3;
+	uint64_t iterations = 10000;
 	bool printKemInfo = false;
 
 	OQS_KEM *single_kem = NULL;
@@ -151,10 +151,10 @@ int main(int argc, char **argv) {
 			} else {
 				return EXIT_FAILURE;
 			}
-		} else if ((strcmp(argv[i], "--duration") == 0) || (strcmp(argv[i], "-d") == 0)) {
+		} else if ((strcmp(argv[i], "--iterations") == 0) || (strcmp(argv[i], "-d") == 0)) {
 			if (i < argc - 1) {
-				duration = (uint64_t)strtol(argv[i + 1], NULL, 10);
-				if (duration > 0) {
+				iterations = (uint64_t)strtol(argv[i + 1], NULL, 10);
+				if (iterations > 0) {
 					i += 1;
 					continue;
 				}
@@ -179,7 +179,7 @@ int main(int argc, char **argv) {
 		fprintf(stderr, "\n");
 		fprintf(stderr, "<options>\n");
 		fprintf(stderr, "--algs             Print supported algorithms and terminate\n");
-		fprintf(stderr, "--duration n\n");
+		fprintf(stderr, "--iterations n\n");
 		fprintf(stderr, " -d n              Run each speed test for approximately n seconds, default n=3\n");
 		fprintf(stderr, "--help\n");
 		fprintf(stderr, " -h                Print usage\n");
@@ -197,13 +197,13 @@ int main(int argc, char **argv) {
 
 	PRINT_TIMER_HEADER
 	if (single_kem != NULL) {
-		rc = ake_speed_wrapper(single_kem->method_name, duration, printKemInfo);
+		rc = ake_speed_wrapper(single_kem->method_name, iterations, printKemInfo);
 		if (rc != OQS_SUCCESS) {
 			ret = EXIT_FAILURE;
 		}
 	} else {
 		for (size_t i = 0; i < OQS_KEM_algs_length; i++) {
-			rc = ake_speed_wrapper(OQS_KEM_alg_identifier(i), duration, printKemInfo);
+			rc = ake_speed_wrapper(OQS_KEM_alg_identifier(i), iterations, printKemInfo);
 			if (rc != OQS_SUCCESS) {
 				ret = EXIT_FAILURE;
 			}
