@@ -71,10 +71,9 @@ jobs:
     - name: Run tests
       run: |
         mkdir -p build build/results
-        cd build
         ls -lah .
-        mv ./Linux build
-        cd ./build/Linux
+        mv ./${{ matrix.config.artifact }} build
+        cd ./build/${{ matrix.config.artifact }}
         bash ../graphics/run_tests.sh
 
     - name: Generate CSVs
