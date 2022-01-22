@@ -77,7 +77,6 @@ jobs:
         bash graphics/run_tests.sh
 
     - name: Generate CSVs
-      working-directory: build
       run: |
         sudo apt install -y nodejs npm
         npm i parse-markdown-table-cli
