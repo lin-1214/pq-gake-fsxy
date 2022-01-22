@@ -34,11 +34,15 @@ do
     do
       type_gake="${type}_${N}"
       echo $type_gake
+      echo ${FOLDER}/${type}.txt
+      echo ${FOLDER}/${OUTPUT}/${type_gake}.csv
       cat ${FOLDER}/${type_gake}.txt | sed '1,14d;$d' | ./node_modules/parse-markdown-table-cli/bin | node ${JSON2CSV_FOLDER}/json2csv.js ${type} ${N} > ${FOLDER}/${OUTPUT}/${type_gake}.csv
       cp ${FOLDER}/${type_gake}.txt ${FOLDER}/${OUTPUT}
     done
   else
     echo $type
+    echo ${FOLDER}/${type}.txt
+    echo ${FOLDER}/${OUTPUT}/${type}.csv
     cat ${FOLDER}/${type}.txt | sed '1,14d;$d' | ./node_modules/parse-markdown-table-cli/bin | node ${JSON2CSV_FOLDER}/json2csv.js ${type} ${N} > ${FOLDER}/${OUTPUT}/${type}.csv
     cp ${FOLDER}/${type}.txt ${FOLDER}/${OUTPUT}
   fi
