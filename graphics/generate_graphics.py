@@ -118,7 +118,7 @@ def plot_heatmap_level(data, config):
     fig.suptitle('Operations heatmap', fontsize=30)
     plt.yticks(rotation=0)
 
-    figname = "{}/{}/cycles_operations.png".format(config["FOLDER"], config["OUTPUT_FOLDER"])
+    figname = "{}/{}/cycles_operations_level.png".format(config["FOLDER"], config["OUTPUT_FOLDER"])
     fig.savefig(figname)
     print("Saved file to {}".format(figname), flush=True)
 
