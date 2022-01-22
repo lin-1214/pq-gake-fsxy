@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
 
 PARTIES_CONF="graphics/PARTIES.conf"
-INPUT_FOLDER="./build/bin"
-OUTPUT_FOLDER="./build"
+INPUT_FOLDER="build/bin"
+OUTPUT_FOLDER="build"
 
 reverse() {
     # first argument is the array to reverse
