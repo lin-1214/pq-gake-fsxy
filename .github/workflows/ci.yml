@@ -81,6 +81,7 @@ jobs:
         sudo apt install -y nodejs npm
         npm i parse-markdown-table-cli
         ls -lah .
+        ls -lah ./build
         bash graphics/convert_tables.sh
 
     - name: Download dependencies
