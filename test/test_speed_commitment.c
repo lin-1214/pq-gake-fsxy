@@ -27,7 +27,7 @@ int main(void) {
   uint8_t *coins = NULL;
   uint8_t *m = NULL;
 
-  int ITERATIONS = 1;
+  int ITERATIONS = 10000;
 
   printf("Speed test\n");
   printf("==========\n");
