@@ -136,7 +136,7 @@ int main(int argc, char **argv) {
 	OQS_STATUS rc;
 
 	bool printUsage = false;
-	uint64_t iterations = 10;
+	uint64_t iterations = 10000;
 	bool printKemInfo = false;
 
 	OQS_KEM *single_kem = NULL;
