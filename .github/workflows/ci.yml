@@ -72,7 +72,7 @@ jobs:
       run: |
         mkdir -p build build/results build/bin
         ls -lah .
-        mv ./Linux/bin/* build/bin/*
+        mv ./Linux/bin/* build/bin
         chmod +x ./build/bin/*
         bash graphics/run_tests.sh
 
