@@ -54,6 +54,7 @@ jobs:
 
 
   tests:
+    if: contains(github.ref, 'tags/v')
     runs-on: self-hosted
     needs: build
     timeout-minutes: 0
