@@ -137,7 +137,7 @@ jobs:
       matrix:
         config:
         - {
-            name: "Ubuntu Latest GCC", artifact: "Linux.tar.xz",
+            name: "Ubuntu Latest GCC", artifact: "Linux",
             os: ubuntu-20.04
           }
         # - {
