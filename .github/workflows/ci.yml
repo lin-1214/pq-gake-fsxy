@@ -179,6 +179,7 @@ jobs:
         upload_url: ${{ steps.set_upload_url.outputs.upload_url }}
         asset_path: ./${{ matrix.config.artifact }}
         asset_name: ${{ matrix.config.artifact }}
+        asset_content_type: application/x-gtar
 
     - name: Compress results
       run: |
