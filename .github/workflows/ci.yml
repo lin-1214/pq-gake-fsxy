@@ -169,7 +169,11 @@ jobs:
       run: |
         upload_url=`cat ./upload_url`
         echo ::set-output name=upload_url::$upload_url
-        ls -lah .
+
+    - name: Compress results
+      run: |
+        zip -r results.zip *.csv *.txt *.png
+        zip -r Linux.zip bin/*
 
     - name: Upload to Release
       id: upload_to_release
@@ -178,13 +182,9 @@ jobs:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
         upload_url: ${{ steps.set_upload_url.outputs.upload_url }}
-        asset_path: ${{ matrix.config.artifact }}
-        asset_name: ${{ matrix.config.artifact }}
-        asset_content_type: application/x-gtar
-
-    - name: Compress results
-      run: |
-        zip -r results.zip *.csv *.txt *.png
+        asset_path: ./Linux.zip
+        asset_name: Linux.zip
+        asset_content_type: application/zip
 
     - name: Upload to Release
       uses: actions/upload-release-asset@v1.0.1
