@@ -49,7 +49,7 @@ void ake_init(OQS_KEM* kem,
   OQS_MEM_secure_free(coins, kem->length_coins);
 }
 
-void ake_algA(OQS_KEM* kem,
+void ake_algB(OQS_KEM* kem,
               const uint8_t* ekA1,
               const uint8_t* ekA2,
               const uint8_t* dkB1,
@@ -102,7 +102,7 @@ void ake_algA(OQS_KEM* kem,
   OQS_MEM_secure_free(coins, kem->length_coins);
 }
 
-void ake_algB(OQS_KEM* kem,
+void ake_algA(OQS_KEM* kem,
               const uint8_t* cB1,
               const uint8_t* cB2,
               const uint8_t* dkA1,

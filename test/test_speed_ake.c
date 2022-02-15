@@ -89,13 +89,13 @@ static OQS_STATUS ake_speed_wrapper(const char *method_name, int iterations, boo
   )
 
   TIME_OPERATION_ITERATIONS(
-    ake_algA(kem, ekA1, ekA2, dkB1, kB1, kB2, cA1, cB1, cB2, kA1_prime, skB),
+    ake_algB(kem, ekA1, ekA2, dkB1, kB1, kB2, cA1, cB1, cB2, kA1_prime, skB),
     "algA",
     iterations
   )
 
   TIME_OPERATION_ITERATIONS(
-    ake_algB(kem, cB1, cB2, dkA1, dkA2, kA1, skA),
+    ake_algA(kem, cB1, cB2, dkA1, dkA2, kA1, skA),
     "algB",
     iterations
   )

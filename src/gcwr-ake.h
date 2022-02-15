@@ -22,7 +22,7 @@ void ake_init(OQS_KEM* kem,
               uint8_t* ekA2,
               uint8_t* dkA2);
 
-void ake_algA(OQS_KEM* kem,
+void ake_algB(OQS_KEM* kem,
               const uint8_t* ekA1,
               const uint8_t* ekA2,
               const uint8_t* dkB1,
@@ -34,7 +34,7 @@ void ake_algA(OQS_KEM* kem,
               uint8_t* kA1,
               uint8_t* skB);
 
-void ake_algB(OQS_KEM* kem,
+void ake_algA(OQS_KEM* kem,
               const uint8_t* cB1,
               const uint8_t* cB2,
               const uint8_t* dkA1,

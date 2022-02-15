@@ -68,7 +68,7 @@ int main(void) {
     uint8_t *skB = malloc(kem->length_shared_secret);
     uint8_t *kA1_prime = malloc(kem->length_shared_secret);
 
-    ake_algA(kem, ekA1, ekA2, dkB1, kB1, kB2, cA1, cB1, cB2, kA1_prime, skB);
+    ake_algB(kem, ekA1, ekA2, dkB1, kB1, kB2, cA1, cB1, cB2, kA1_prime, skB);
     printf("[U_B] kA1: ");
     print_hex_short(kA1_prime, kem->length_shared_secret, MAX);
 
@@ -77,7 +77,7 @@ int main(void) {
     // -----------------------------------------------
     // Alg B
     uint8_t *skA = malloc(kem->length_shared_secret);
-    ake_algB(kem, cB1, cB2, dkA1, dkA2, kA1, skA);
+    ake_algA(kem, cB1, cB2, dkA1, dkA2, kA1, skA);
 
     clock_t end_algA = times(NULL);
 
