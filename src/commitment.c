@@ -15,8 +15,9 @@ void init_commitment(OQS_KEM* kem, Commitment* commitment) {
   commitment->kem = kem;
   commitment->ciphertext_kem = malloc(kem->length_ciphertext);
   init_to_zero(commitment->ciphertext_kem, kem->length_ciphertext);
-  commitment->ciphertext_dem = malloc(kem->length_shared_secret);
-  init_to_zero(commitment->ciphertext_dem, kem->length_shared_secret);
+  const int DEM_LEN = commitment->kem->length_shared_secret + sizeof(int);
+  commitment->ciphertext_dem = malloc(DEM_LEN);
+  init_to_zero(commitment->ciphertext_dem, DEM_LEN);
   init_to_zero(commitment->tag, AES_256_GCM_TAG_LENGTH);
 }
 

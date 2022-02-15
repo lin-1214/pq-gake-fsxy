@@ -68,7 +68,7 @@ int main(int argc, char** argv){
   clock_t end_3 = clock();
 
   // Round 4
-  printf("Round 4\n");
+  // printf("Round 4\n");
   for (int i = 0; i < NUM_PARTIES; i++) {
 
     int res = check_xs(kem, pointer_to_parties, i, NUM_PARTIES, kem->length_shared_secret); // Check Xi
@@ -129,13 +129,14 @@ int main(int argc, char** argv){
   } else {
     printf("All keys are NOT equal!\n");
   }
+  //
 
   // Free resources
   free_parties(pointer_to_parties, NUM_PARTIES);
+  OQS_KEM_free(kem);
 
   clock_t end_4 = clock();
 
   print_stats(end_init, end_12, end_3, end_4, begin_total);
-
   return 0;
 }

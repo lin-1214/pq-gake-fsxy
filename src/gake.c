@@ -60,6 +60,7 @@ void two_ake(OQS_KEM* kem, uint8_t *ekA1, uint8_t *ekB1, uint8_t *dkA1, uint8_t 
   OQS_MEM_insecure_free(cA1);
   OQS_MEM_insecure_free(cB1);
   OQS_MEM_insecure_free(cB2);
+  OQS_MEM_insecure_free(ekA2);
 
 }
 
@@ -187,11 +188,23 @@ void print_parties(OQS_KEM* kem, Party* parties, int num_parties, int show) {
 
 void free_parties(Party* parties, int num_parties) {
   for (int i = 0; i < num_parties; i++) {
-    free(parties[i].commitments);
+    for (int j = 0; j < num_parties; j++) {
+      free(parties[i].coins[j]);
+      free(parties[i].masterkey[j]);
+      free(parties[i].xs[j]);
+      // free_commitment(&parties[i].commitments[j]);
+    }
+    // free(parties[i].commitments);
     free(parties[i].masterkey);
     free(parties[i].pids);
     free(parties[i].coins);
     free(parties[i].xs);
+    free(parties[i].sid);
+    free(parties[i].sk);
+    free(parties[i].key_left);
+    free(parties[i].key_right);
+    free(parties[i].public_key);
+    free(parties[i].secret_key);
   }
   free(parties);
 }
