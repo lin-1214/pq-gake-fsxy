@@ -11,6 +11,29 @@ from pathlib import Path
 from matplotlib import pyplot as plt
 from matplotlib.colors import LinearSegmentedColormap
 
+COLORS = {
+    'Classic-McEliece-348864': "#372101" ,
+    'Classic-McEliece-348864f': "#A77500",
+    'Classic-McEliece-460896': "#1CE6FF",
+    'Classic-McEliece-460896f': "#FF34FF",
+    'Classic-McEliece-6688128': "#FF4A46",
+    'Classic-McEliece-6688128f': "#008941",
+    'Classic-McEliece-6960119': "#006FA6",
+    'Classic-McEliece-6960119f': "#A30059",
+    'Classic-McEliece-8192128': "#6A3A4C",
+    'Classic-McEliece-8192128f': "#7A4900",
+    'Kyber512': "#0000A6",
+    'Kyber768': "#63FFAC",
+    'Kyber1024': "#B79762",
+    'NTRU-HPS-2048-509': "#004D43",
+    'NTRU-HPS-2048-677': "#5A0007",
+    'NTRU-HRSS-701': "#809693",
+    'NTRU-HPS-4096-821': "#0089A3",
+    'LightSaber-KEM': "#1B4400",
+    'Saber-KEM': "#4FC601",
+    'FireSaber-KEM': "#3B5DFF"
+}
+
 def plot_scalability_level(data, config):
 
     LEVELS = [config["L1"], config["L3"], config["L5"]]
@@ -37,10 +60,14 @@ def plot_scalability_level(data, config):
         print(data)
         df2 = df2.groupby(['algorithm','N'])['mean_time_us'].sum().reset_index()
         print(df2)
-        sns.lineplot(ax=axes[j], x="N", y="mean_time_us", hue="algorithm", data=df2)
+        p = sns.lineplot(ax=axes[j], x="N", y="mean_time_us", hue="algorithm", data=df2, palette=COLORS, linewidth=2, style="algorithm", markers=True, dashes=False)
         axes[j].set_title("Level {}".format(LEVELS_LABELS[j]), fontsize="x-large")
         axes[j].set_xlabel('Number of parties', fontsize="x-large")
         axes[j].set_ylabel('Time (ns)', fontsize="x-large")
+
+        h, l = p.get_legend_handles_labels()
+        l, h = zip(*sorted(zip(l, h)))
+        p.legend(h, l)
 
         figname = "{}/{}/scalability_level_time.png".format(config["FOLDER"], config["OUTPUT_FOLDER"])
         fig.savefig(figname)
@@ -56,9 +83,13 @@ def plot_scalability(data, config):
     print(data)
     df2 = df2.groupby(['algorithm','N'])['mean_time_us'].sum().reset_index()
     print(df2)
-    sns.lineplot(ax=axes, x="N", y="mean_time_us", hue="algorithm", data=df2)
+    p = sns.lineplot(ax=axes, x="N", y="mean_time_us", hue="algorithm", data=df2, palette=COLORS, linewidth=2, style="algorithm", markers=True, dashes=False)
     axes.set_xlabel('Number of parties', fontsize="x-large")
     axes.set_ylabel('Time (ns)', fontsize="x-large")
+
+    h, l = p.get_legend_handles_labels()
+    l, h = zip(*sorted(zip(l, h)))
+    p.legend(h, l)
 
     figname = "{}/{}/scalability_time.png".format(config["FOLDER"], config["OUTPUT_FOLDER"])
     fig.savefig(figname)
@@ -157,7 +188,7 @@ def plot_heatmap(data, config):
 
 def plot_speed_commitment(data, config):
 
-    fig, axes = plt.subplots(3,4, figsize=(25,25))
+    fig, axes = plt.subplots(3,3, figsize=(25,25), sharey=False)
     fig.suptitle('Commitment operations', fontsize=30)
     fig.subplots_adjust(hspace=0.75, wspace=0.4)
 
@@ -189,23 +220,23 @@ def plot_speed_commitment(data, config):
             # with pd.option_context('display.max_rows', None, 'display.max_columns', None):
             #     print(df2)
 
-            if i == 0:
-                axes[j,i].text(0.8, 0.5, 'Level {}'.format(LEVELS_LABELS[j]),
-                    horizontalalignment='center',
-                    verticalalignment='center',
-                    transform=axes[j,i].transAxes,
-                    fontsize="xx-large"
-                )
-                axes[j,i].axis('off')
+            # if i == 0:
+            #     axes[j,i].text(0.8, 0.5, 'Level {}'.format(LEVELS_LABELS[j]),
+            #         horizontalalignment='center',
+            #         verticalalignment='center',
+            #         transform=axes[j,i].transAxes,
+            #         fontsize="xx-large"
+            #     )
+            #     axes[j,i].axis('off')
 
 
-            sns.barplot(ax=axes[j,i+1], x="algorithm", y="mean_time_us", data=df2)
-            axes[j,i+1].set_title(operations_names[i], fontsize="x-large")
-            # axes[j,i+1].legend(loc='upper left')
-            axes[j,i+1].tick_params(axis='x', rotation=90)
-            axes[j,i+1].set(yscale="log")
-            axes[j,i+1].set_xlabel('', fontsize="x-large")
-            axes[j,i+1].set_ylabel('Time (ns)', fontsize="x-large")
+            sns.barplot(ax=axes[j,i], x="algorithm", y="mean_time_us", data=df2, palette=COLORS)
+            axes[j,i].set_title(operations_names[i], fontsize="x-large")
+            # axes[j,i].legend(loc='upper left')
+            axes[j,i].tick_params(axis='x', rotation=90)
+            axes[j,i].set(yscale="log")
+            axes[j,i].set_xlabel('', fontsize="x-large")
+            axes[j,i].set_ylabel('Time (ns)', fontsize="x-large")
             # axes[j,i+1].axis('equal')
 
     figname = "{}/{}/level_commitment_time.png".format(config["FOLDER"], config["OUTPUT_FOLDER"])
@@ -214,8 +245,8 @@ def plot_speed_commitment(data, config):
 
 def plot_speed_gake(data, config):
 
-    fig, axes = plt.subplots(3,5, figsize=(25,25))
-    fig.suptitle('AKE operations', fontsize=30)
+    fig, axes = plt.subplots(3,4, figsize=(25,25), sharey=True)
+    fig.suptitle('GAKE operations', fontsize=30)
     fig.subplots_adjust(hspace=0.75, wspace=0.4)
 
     LEVELS = [config["L1"], config["L3"], config["L5"]]
@@ -246,23 +277,23 @@ def plot_speed_gake(data, config):
             # with pd.option_context('display.max_rows', None, 'display.max_columns', None):
             #     print(df2)
 
-            if i == 0:
-                axes[j,i].text(0.8, 0.5, 'Level {}'.format(LEVELS_LABELS[j]),
-                    horizontalalignment='center',
-                    verticalalignment='center',
-                    transform=axes[j,i].transAxes,
-                    fontsize="xx-large"
-                )
-                axes[j,i].axis('off')
+            # if i == 0:
+            #     axes[j,i].text(0.8, 0.5, 'Level {}'.format(LEVELS_LABELS[j]),
+            #         horizontalalignment='center',
+            #         verticalalignment='center',
+            #         transform=axes[j,i].transAxes,
+            #         fontsize="xx-large"
+            #     )
+            #     axes[j,i].axis('off')
 
 
-            sns.barplot(ax=axes[j,i+1], x="algorithm", y="mean_time_us", data=df2)
-            axes[j,i+1].set_title(operations_names[i], fontsize="x-large")
-            # axes[j,i+1].legend(loc='upper left')
-            axes[j,i+1].tick_params(axis='x', rotation=90)
-            axes[j,i+1].set(yscale="log")
-            axes[j,i+1].set_xlabel('', fontsize="x-large")
-            axes[j,i+1].set_ylabel('Time (ns)', fontsize="x-large")
+            sns.barplot(ax=axes[j,i], x="algorithm", y="mean_time_us", data=df2, palette=COLORS)
+            axes[j,i].set_title(operations_names[i], fontsize="x-large")
+            # axes[j,i].legend(loc='upper left')
+            axes[j,i].tick_params(axis='x', rotation=90)
+            axes[j,i].set(yscale="log")
+            axes[j,i].set_xlabel('', fontsize="x-large")
+            axes[j,i].set_ylabel('Time (ns)', fontsize="x-large")
             # axes[j,i+1].axis('equal')
 
     figname = "{}/{}/level_gake_time.png".format(config["FOLDER"], config["OUTPUT_FOLDER"])
@@ -271,7 +302,7 @@ def plot_speed_gake(data, config):
 
 def plot_speed_ake(data, config):
 
-    fig, axes = plt.subplots(3,4, figsize=(25,25))
+    fig, axes = plt.subplots(3,3, figsize=(25,25), sharey=True)
     fig.suptitle('AKE operations', fontsize=30)
     fig.subplots_adjust(hspace=0.75, wspace=0.4)
 
@@ -291,7 +322,7 @@ def plot_speed_ake(data, config):
     data["level"] = data.apply(conditions, axis=1)
 
     operations = ['init', 'algA', 'algB']
-    operations_names = ['Init', 'Alg A', 'Alg B']
+    operations_names = ['Init', 'AlgB', 'AlgA']
     for (i, var) in enumerate(operations):
         for (j, level) in enumerate(LEVELS):
             df = data[(data['operation'] == var) & data['algorithm'].isin(level)]
@@ -303,23 +334,23 @@ def plot_speed_ake(data, config):
             # with pd.option_context('display.max_rows', None, 'display.max_columns', None):
             #     print(df2)
 
-            if i == 0:
-                axes[j,i].text(0.8, 0.5, 'Level {}'.format(LEVELS_LABELS[j]),
-                    horizontalalignment='center',
-                    verticalalignment='center',
-                    transform=axes[j,i].transAxes,
-                    fontsize="xx-large"
-                )
-                axes[j,i].axis('off')
+            # if i == 0:
+            #     axes[j,i].text(0.8, 0.5, 'Level {}'.format(LEVELS_LABELS[j]),
+            #         horizontalalignment='center',
+            #         verticalalignment='center',
+            #         transform=axes[j,i].transAxes,
+            #         fontsize="xx-large"
+            #     )
+            #     axes[j,i].axis('off')
 
 
-            sns.barplot(ax=axes[j,i+1], x="algorithm", y="mean_time_us", data=df2)
-            axes[j,i+1].set_title(operations_names[i], fontsize="x-large")
-            # axes[j,i+1].legend(loc='upper left')
-            axes[j,i+1].tick_params(axis='x', rotation=90)
-            axes[j,i+1].set(yscale="log")
-            axes[j,i+1].set_xlabel('', fontsize="x-large")
-            axes[j,i+1].set_ylabel('Time (ns)', fontsize="x-large")
+            sns.barplot(ax=axes[j,i], x="algorithm", y="mean_time_us", data=df2, palette=COLORS)
+            axes[j,i].set_title(operations_names[i], fontsize="x-large")
+            # axes[j,i].legend(loc='upper left')
+            axes[j,i].tick_params(axis='x', rotation=90)
+            axes[j,i].set(yscale="log")
+            axes[j,i].set_xlabel('', fontsize="x-large")
+            axes[j,i].set_ylabel('Time (ns)', fontsize="x-large")
             # axes[j,i+1].axis('equal')
 
     figname = "{}/{}/level_ake_time.png".format(config["FOLDER"], config["OUTPUT_FOLDER"])
@@ -341,7 +372,7 @@ def plot_speed_kem(data, config):
         else:
             return ""
 
-    fig, axes = plt.subplots(3,4, figsize=(25,25))
+    fig, axes = plt.subplots(3,3, figsize=(25,25), sharey=True)
     fig.suptitle('KEM operations', fontsize=30)
     fig.subplots_adjust(hspace=0.75, wspace=0.4)
 
@@ -360,24 +391,24 @@ def plot_speed_kem(data, config):
             # with pd.option_context('display.max_rows', None, 'display.max_columns', None):
             #     print(df2)
 
-            if i == 0:
-                axes[j,i].text(0.8, 0.5, 'Level {}'.format(LEVELS_LABELS[j]),
-                    horizontalalignment='center',
-                    verticalalignment='center',
-                    transform=axes[j,i].transAxes,
-                    fontsize="xx-large"
-                )
-                axes[j,i].axis('off')
+            # if i == 0:
+            #     axes[j,i].text(0.8, 0.5, 'Level {}'.format(LEVELS_LABELS[j]),
+            #         horizontalalignment='center',
+            #         verticalalignment='center',
+            #         transform=axes[j,i].transAxes,
+            #         fontsize="xx-large"
+            #     )
+            #     axes[j,i].axis('off')
 
 
-            sns.barplot(ax=axes[j,i+1], x="algorithm", y="mean_time_us", data=df2)
-            axes[j,i+1].set_title(operations_names[i], fontsize="x-large")
-            # axes[j,i+1].legend(loc='upper left')
-            axes[j,i+1].tick_params(axis='x', rotation=90)
-            axes[j,i+1].set(yscale="log")
-            axes[j,i+1].set_xlabel('', fontsize="x-large")
-            axes[j,i+1].set_ylabel('Time (ns)', fontsize="x-large")
-            # axes[j,i+1].axis('equal')
+            sns.barplot(ax=axes[j,i], x="algorithm", y="mean_time_us", data=df2, palette=COLORS)
+            axes[j,i].set_title(operations_names[i], fontsize="x-large")
+            # axes[j,i].legend(loc='upper left')
+            axes[j,i].tick_params(axis='x', rotation=90)
+            axes[j,i].set(yscale="log")
+            axes[j,i].set_xlabel('', fontsize="x-large")
+            axes[j,i].set_ylabel('Time (ns)', fontsize="x-large")
+            # axes[j,i].axis('equal')
 
     figname = "{}/{}/kem_level_time.png".format(config["FOLDER"], config["OUTPUT_FOLDER"])
     fig.savefig(figname)
