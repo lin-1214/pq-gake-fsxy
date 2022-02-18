@@ -15,6 +15,35 @@ void concat_keys(const uint8_t *key1, const uint8_t *key2, const uint8_t *key3,
   memcpy(out + 2*length, key3, length);
 }
 
+void concat_sid(OQS_KEM* kem,
+                const char UA[PID_LENGTH],
+                const char UB[PID_LENGTH],
+                const uint8_t *ekA1,
+                const uint8_t *ekB1,
+                const uint8_t *cA1,
+                const uint8_t *ekA2,
+                const uint8_t *cB1,
+                const uint8_t *cB2,
+                uint8_t *sid) {
+
+  memcpy(sid, UA, PID_LENGTH);
+  memcpy(sid + PID_LENGTH, UB, PID_LENGTH);
+  memcpy(sid + 2*PID_LENGTH, ekA1, kem->length_public_key);
+  memcpy(sid + 2*PID_LENGTH + kem->length_public_key, ekA2, kem->length_public_key);
+  memcpy(sid + 2*PID_LENGTH + 2*kem->length_public_key, ekB1, kem->length_public_key);
+  memcpy(sid + 2*PID_LENGTH + 3*kem->length_public_key, cA1, kem->length_ciphertext);
+  memcpy(sid + 2*PID_LENGTH + 3*kem->length_public_key + kem->length_ciphertext, cB1, kem->length_ciphertext);
+  memcpy(sid + 2*PID_LENGTH + 3*kem->length_public_key + 2*kem->length_ciphertext, cB2, kem->length_ciphertext);
+}
+
+void gen_sk(uint8_t *sid, uint8_t *concat_keys, size_t length_sid, size_t length_concat_keys, uint8_t *sk){
+  uint8_t *temp = malloc(length_sid + length_concat_keys);
+  memcpy(temp, concat_keys, length_concat_keys);
+  memcpy(temp + length_concat_keys, sid, length_sid);
+  OQS_SHA3_sha3_256(sk, temp, length_sid + length_concat_keys);
+  OQS_MEM_secure_free(temp, length_sid + length_concat_keys);
+}
+
 void ake_init(OQS_KEM* kem,
               uint8_t* dkA1,
               uint8_t* ekB1,
@@ -59,17 +88,19 @@ void ake_algB(OQS_KEM* kem,
               uint8_t* cB1,
               uint8_t* cB2,
               uint8_t* kA1,
+              uint8_t* ekB1,
               uint8_t* skB) {
 
   uint8_t *rB1 = malloc(kem->length_shared_secret);
-  // uint8_t *rB2 = malloc(kem->length_shared_secret);
   uint8_t *coins = malloc(kem->length_coins);
 
+  const size_t sid_length = 2*PID_LENGTH + 3*kem->length_public_key + 3*kem->length_ciphertext;
+
   OQS_randombytes(rB1, kem->length_shared_secret);
-  // OQS_randombytes(rB2, kem->length_shared_secret);
 
   uint8_t *tempB1 = malloc(kem->length_shared_secret + kem->length_secret_key);
   uint8_t *hashB1 = malloc(kem->length_shared_secret);
+  uint8_t *sid = malloc(sid_length);
   memcpy(tempB1, rB1, kem->length_shared_secret);
   memcpy(tempB1 + kem->length_shared_secret, dkB1, kem->length_secret_key);
   OQS_SHA3_sha3_256(hashB1, tempB1, kem->length_shared_secret + kem->length_secret_key);
@@ -92,14 +123,15 @@ void ake_algB(OQS_KEM* kem,
 
   uint8_t *concat_keysB = malloc(3*kem->length_shared_secret);
   concat_keys(kA1, kB1, kB2, kem->length_shared_secret, concat_keysB);
-  OQS_SHA3_sha3_256(skB, concat_keysB, 3*kem->length_shared_secret);
+  concat_sid(kem, U_A, U_B, ekA1, ekB1, cA1, ekA2, cB1, cB2, sid);
+  gen_sk(sid, concat_keysB, sid_length, 3*kem->length_shared_secret, skB);
 
   OQS_MEM_secure_free(concat_keysB, 3*kem->length_shared_secret);
   OQS_MEM_secure_free(tempB1, kem->length_shared_secret + kem->length_secret_key);
   OQS_MEM_secure_free(hashB1, kem->length_shared_secret);
   OQS_MEM_secure_free(rB1, kem->length_shared_secret);
-  // OQS_MEM_secure_free(rB2, kem->length_shared_secret);
   OQS_MEM_secure_free(coins, kem->length_coins);
+  OQS_MEM_secure_free(sid, sid_length);
 }
 
 void ake_algA(OQS_KEM* kem,
@@ -108,7 +140,14 @@ void ake_algA(OQS_KEM* kem,
               const uint8_t* dkA1,
               const uint8_t* dkA2,
               const uint8_t* kA1,
-              uint8_t* sk){
+              const uint8_t* ekA1,
+              const uint8_t* ekB1,
+              const uint8_t* ekA2,
+              const uint8_t* cA1,
+              uint8_t* skB){
+
+  const size_t sid_length = 2*PID_LENGTH + 3*kem->length_public_key + 3*kem->length_ciphertext;
+  uint8_t *sid = malloc(sid_length);
 
   uint8_t *kB1_prime = malloc(kem->length_shared_secret);
   OQS_KEM_decaps(kem, kB1_prime, cB1, dkA1);
@@ -118,9 +157,12 @@ void ake_algA(OQS_KEM* kem,
 
   uint8_t *concat_keysA = malloc(3*kem->length_shared_secret);
   concat_keys(kA1, kB1_prime, kB2_prime, kem->length_shared_secret, concat_keysA);
-  OQS_SHA3_sha3_256(sk, concat_keysA, 3*kem->length_shared_secret);
+  concat_sid(kem, U_A, U_B, ekA1, ekB1, cA1, ekA2, cB1, cB2, sid);
+  gen_sk(sid, concat_keysA, sid_length, 3*kem->length_shared_secret, skB);
 
   OQS_MEM_secure_free(concat_keysA, 3*kem->length_shared_secret);
   OQS_MEM_secure_free(kB1_prime, kem->length_shared_secret);
   OQS_MEM_secure_free(kB2_prime, kem->length_shared_secret);
+  OQS_MEM_secure_free(sid, sid_length);
+
 }

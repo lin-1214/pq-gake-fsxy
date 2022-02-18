@@ -46,8 +46,8 @@ void two_ake(OQS_KEM* kem, uint8_t *ekA1, uint8_t *ekB1, uint8_t *dkA1, uint8_t 
   uint8_t *kA1_prime = malloc(kem->length_shared_secret);
 
   ake_init(kem, dkA1, ekB1, cA1, kA1, ekA2, dkA2);
-  ake_algB(kem, ekA1, ekA2, dkB1, kB1, kB2, cA1, cB1, cB2, kA1_prime, skB);
-  ake_algA(kem, cB1, cB2, dkA1, dkA2, kA1, skA);
+  ake_algB(kem, ekA1, ekA2, dkB1, kB1, kB2, cA1, cB1, cB2, kA1_prime, ekB1, skB);
+  ake_algA(kem, cB1, cB2, dkA1, dkA2, kA1, ekA1, ekB1, ekA2, cA1, skA);
 
   // Delete secrets and free
   OQS_MEM_secure_free(dkA2, kem->length_secret_key);
