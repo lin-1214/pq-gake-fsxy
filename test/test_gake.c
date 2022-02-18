@@ -109,14 +109,14 @@ int main(int argc, char** argv){
   compute_masterkey(kem, pointer_to_parties, NUM_PARTIES, kem->length_shared_secret);
 
   // Compute session key and session identifier
-  compute_sk_sid(kem, pointer_to_parties, NUM_PARTIES, kem->length_shared_secret);
+  compute_sk_sid(kem, pointer_to_parties, NUM_PARTIES, SECRET_KEY_LENGTH);
 
   if (verbose) {
     print_parties(kem, pointer_to_parties, NUM_PARTIES, SHOW);
   }
 
   // Check all keys are correct
-  int res = check_all_keys(pointer_to_parties, NUM_PARTIES, kem->length_shared_secret);
+  int res = check_all_keys(pointer_to_parties, NUM_PARTIES, SECRET_KEY_LENGTH);
 
   if (res == 0) {
     printf("All keys are equal!\n");

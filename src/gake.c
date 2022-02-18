@@ -156,8 +156,8 @@ void init_parties(OQS_KEM* kem, Party* parties, int num_parties) {
       init_to_zero(parties[i].xs[j], kem->length_shared_secret);
     }
 
-    parties[i].sid = malloc(kem->length_shared_secret);
-    parties[i].sk  = malloc(kem->length_shared_secret);
+    parties[i].sid = malloc(SECRET_KEY_LENGTH);
+    parties[i].sk  = malloc(SECRET_KEY_LENGTH);
     parties[i].key_left = malloc(kem->length_shared_secret);
     parties[i].key_right = malloc(kem->length_shared_secret);
     init_to_zero(parties[i].sid, kem->length_shared_secret);
@@ -199,8 +199,8 @@ void free_parties(Party* parties, int num_parties) {
     free(parties[i].pids);
     free(parties[i].coins);
     free(parties[i].xs);
-    free(parties[i].sid);
-    free(parties[i].sk);
+    OQS_MEM_secure_free(parties[i].sid, SECRET_KEY_LENGTH);
+    OQS_MEM_secure_free(parties[i].sk, SECRET_KEY_LENGTH);
     free(parties[i].key_left);
     free(parties[i].key_right);
     free(parties[i].public_key);

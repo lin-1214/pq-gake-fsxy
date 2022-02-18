@@ -10,6 +10,8 @@
 #define PID_LENGTH 20
 #endif
 
+#define SECRET_KEY_LENGTH 32
+
 int mod(int x, int y);
 void itoa(int n, char s[]);
 void reverse(char s[]);
