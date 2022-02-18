@@ -59,6 +59,7 @@ def plot_scalability_level(data, config):
         df2 = df[['algorithm', 'mean_cpu_cycles', 'N', 'operation']]
         print(data)
         df2 = df2.groupby(['algorithm','N'])['mean_cpu_cycles'].sum().reset_index()
+        df2['mean_cpu_cycles'] = df2['mean_cpu_cycles']/df2['N']
         print(df2)
         p = sns.lineplot(ax=axes[j], x="N", y="mean_cpu_cycles", hue="algorithm", data=df2, palette=COLORS, linewidth=2, style="algorithm", markers=True, dashes=False)
         axes[j].set_title("Level {}".format(LEVELS_LABELS[j]), fontsize="x-large")
@@ -82,6 +83,7 @@ def plot_scalability(data, config):
     df2 = data[['algorithm', 'mean_cpu_cycles', 'N', 'operation']]
     print(data)
     df2 = df2.groupby(['algorithm','N'])['mean_cpu_cycles'].sum().reset_index()
+    df2['mean_cpu_cycles'] = df2['mean_cpu_cycles']/df2['N']
     print(df2)
     p = sns.lineplot(ax=axes, x="N", y="mean_cpu_cycles", hue="algorithm", data=df2, palette=COLORS, linewidth=2, style="algorithm", markers=True, dashes=False)
     axes.set_xlabel('Number of parties', fontsize="x-large")
@@ -188,7 +190,7 @@ def plot_heatmap(data, config):
 
 def plot_speed_commitment(data, config):
 
-    fig, axes = plt.subplots(3,3, figsize=(25,25), sharey=False)
+    fig, axes = plt.subplots(3,3, figsize=(25,25), sharey=True)
     fig.suptitle('Commitment operations', fontsize=30)
     fig.subplots_adjust(hspace=0.75, wspace=0.4)
 
@@ -207,9 +209,8 @@ def plot_speed_commitment(data, config):
 
     data["level"] = data.apply(conditions, axis=1)
 
-    operations = ['commit', 'check']
-    operations_names = ['Commit', 'Check']
-    plt.yscale('log',base=10)
+    operations = ['init', 'commit', 'check']
+    operations_names = ['Init', 'Commit', 'Check']
     for (i, var) in enumerate(operations):
         for (j, level) in enumerate(LEVELS):
             df = data[(data['operation'] == var) & data['algorithm'].isin(level)]
@@ -322,8 +323,8 @@ def plot_speed_ake(data, config):
 
     data["level"] = data.apply(conditions, axis=1)
 
-    operations = ['init', 'algA', 'algB']
-    operations_names = ['Init', 'AlgA', 'AlgB']
+    operations = ['init', 'algB', 'algA']
+    operations_names = ['Init', 'AlgB', 'AlgA']
     for (i, var) in enumerate(operations):
         for (j, level) in enumerate(LEVELS):
             df = data[(data['operation'] == var) & data['algorithm'].isin(level)]
