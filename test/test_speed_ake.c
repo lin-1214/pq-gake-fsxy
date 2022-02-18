@@ -52,9 +52,9 @@ static OQS_STATUS ake_speed_wrapper(const char *method_name, int iterations, boo
   kB1 = malloc(kem->length_shared_secret);
   cB2 = malloc(kem->length_ciphertext);
   kB2 = malloc(kem->length_shared_secret);
-  skB = malloc(SECRET_KEY_LENGTH);
+  skB = malloc(kem->length_shared_secret);
   kA1_prime = malloc(kem->length_shared_secret);
-  skA = malloc(SECRET_KEY_LENGTH);
+  skA = malloc(kem->length_shared_secret);
   ekA1 = malloc(kem->length_public_key);
   dkA1 = malloc(kem->length_secret_key);
   ekB1 = malloc(kem->length_public_key);
