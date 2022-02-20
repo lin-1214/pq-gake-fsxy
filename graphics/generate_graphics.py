@@ -59,7 +59,6 @@ def plot_scalability_level(data, config):
         df2 = df[['algorithm', 'mean_cpu_cycles', 'N', 'operation']]
         print(data)
         df2 = df2.groupby(['algorithm','N'])['mean_cpu_cycles'].sum().reset_index()
-        df2['mean_cpu_cycles'] = df2['mean_cpu_cycles']/df2['N']
         print(df2)
         p = sns.lineplot(ax=axes[j], x="N", y="mean_cpu_cycles", hue="algorithm", data=df2, palette=COLORS, linewidth=2, style="algorithm", markers=True, dashes=False)
         axes[j].set_title("Level {}".format(LEVELS_LABELS[j]), fontsize="x-large")
@@ -83,7 +82,6 @@ def plot_scalability(data, config):
     df2 = data[['algorithm', 'mean_cpu_cycles', 'N', 'operation']]
     print(data)
     df2 = df2.groupby(['algorithm','N'])['mean_cpu_cycles'].sum().reset_index()
-    df2['mean_cpu_cycles'] = df2['mean_cpu_cycles']/df2['N']
     print(df2)
     p = sns.lineplot(ax=axes, x="N", y="mean_cpu_cycles", hue="algorithm", data=df2, palette=COLORS, linewidth=2, style="algorithm", markers=True, dashes=False)
     axes.set_xlabel('Number of parties', fontsize="x-large")
