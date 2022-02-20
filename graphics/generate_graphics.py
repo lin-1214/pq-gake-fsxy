@@ -70,7 +70,7 @@ def plot_scalability_level(data, config):
         p.legend(h, l)
 
         figname = "{}/{}/scalability_level.png".format(config["FOLDER"], config["OUTPUT_FOLDER"])
-        fig.savefig(figname)
+        fig.savefig(figname, bbox_inches="tight")
         print("Saved file to {}".format(figname), flush=True)
 
 def plot_scalability(data, config):
@@ -92,7 +92,7 @@ def plot_scalability(data, config):
     p.legend(h, l)
 
     figname = "{}/{}/scalability.png".format(config["FOLDER"], config["OUTPUT_FOLDER"])
-    fig.savefig(figname)
+    fig.savefig(figname, bbox_inches="tight")
     print("Saved file to {}".format(figname), flush=True)
 
 def plot_heatmap_level(data, config):
@@ -149,7 +149,7 @@ def plot_heatmap_level(data, config):
     plt.yticks(rotation=0)
 
     figname = "{}/{}/cycles_operations_level.png".format(config["FOLDER"], config["OUTPUT_FOLDER"])
-    fig.savefig(figname)
+    fig.savefig(figname, bbox_inches="tight")
     print("Saved file to {}".format(figname), flush=True)
 
 def plot_heatmap(data, config):
@@ -183,7 +183,7 @@ def plot_heatmap(data, config):
     plt.yticks(rotation=0)
 
     figname = "{}/{}/cycles_operations.png".format(config["FOLDER"], config["OUTPUT_FOLDER"])
-    fig.savefig(figname)
+    fig.savefig(figname, bbox_inches="tight")
     print("Saved file to {}".format(figname), flush=True)
 
 def plot_speed_commitment(data, config):
@@ -240,7 +240,7 @@ def plot_speed_commitment(data, config):
             # axes[j,i+1].axis('equal')
 
     figname = "{}/{}/cycles_level_commitment.png".format(config["FOLDER"], config["OUTPUT_FOLDER"])
-    fig.savefig(figname)
+    fig.savefig(figname, bbox_inches="tight")
     print("Saved file to {}".format(figname), flush=True)
 
 def plot_speed_gake(data, config):
@@ -297,7 +297,7 @@ def plot_speed_gake(data, config):
             # axes[j,i+1].axis('equal')
 
     figname = "{}/{}/cycles_level_gake.png".format(config["FOLDER"], config["OUTPUT_FOLDER"])
-    fig.savefig(figname)
+    fig.savefig(figname, bbox_inches="tight")
     print("Saved file to {}".format(figname), flush=True)
 
 def plot_speed_ake(data, config):
@@ -353,7 +353,7 @@ def plot_speed_ake(data, config):
             # axes[j,i+1].axis('equal')
 
     figname = "{}/{}/cycles_level_ake.png".format(config["FOLDER"], config["OUTPUT_FOLDER"])
-    fig.savefig(figname)
+    fig.savefig(figname, bbox_inches="tight")
     print("Saved file to {}".format(figname), flush=True)
 
 def plot_speed_kem(data, config):
@@ -410,7 +410,7 @@ def plot_speed_kem(data, config):
             # axes[j,i+1].axis('equal')
 
     figname = "{}/{}/cycles_level_kem.png".format(config["FOLDER"], config["OUTPUT_FOLDER"])
-    fig.savefig(figname)
+    fig.savefig(figname, bbox_inches="tight")
     print("Saved file to {}".format(figname), flush=True)
 
 def main():

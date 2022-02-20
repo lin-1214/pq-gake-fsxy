@@ -70,7 +70,7 @@ def plot_scalability_level(data, config):
         p.legend(h, l)
 
         figname = "{}/{}/scalability_level_time.png".format(config["FOLDER"], config["OUTPUT_FOLDER"])
-        fig.savefig(figname)
+        fig.savefig(figname, bbox_inches="tight")
         print("Saved file to {}".format(figname), flush=True)
 
 def plot_scalability(data, config):
@@ -92,7 +92,7 @@ def plot_scalability(data, config):
     p.legend(h, l)
 
     figname = "{}/{}/scalability_time.png".format(config["FOLDER"], config["OUTPUT_FOLDER"])
-    fig.savefig(figname)
+    fig.savefig(figname, bbox_inches="tight")
     print("Saved file to {}".format(figname), flush=True)
 
 def plot_heatmap_level(data, config):
@@ -149,7 +149,7 @@ def plot_heatmap_level(data, config):
     plt.yticks(rotation=0)
 
     figname = "{}/{}/operations_level_time.png".format(config["FOLDER"], config["OUTPUT_FOLDER"])
-    fig.savefig(figname)
+    fig.savefig(figname, bbox_inches="tight")
     print("Saved file to {}".format(figname), flush=True)
 
 def plot_heatmap(data, config):
@@ -183,7 +183,7 @@ def plot_heatmap(data, config):
     plt.yticks(rotation=0)
 
     figname = "{}/{}/operations_time.png".format(config["FOLDER"], config["OUTPUT_FOLDER"])
-    fig.savefig(figname)
+    fig.savefig(figname, bbox_inches="tight")
     print("Saved file to {}".format(figname), flush=True)
 
 def plot_speed_commitment(data, config):
@@ -240,7 +240,7 @@ def plot_speed_commitment(data, config):
             # axes[j,i+1].axis('equal')
 
     figname = "{}/{}/level_commitment_time.png".format(config["FOLDER"], config["OUTPUT_FOLDER"])
-    fig.savefig(figname)
+    fig.savefig(figname, bbox_inches="tight")
     print("Saved file to {}".format(figname), flush=True)
 
 def plot_speed_gake(data, config):
@@ -297,7 +297,7 @@ def plot_speed_gake(data, config):
             # axes[j,i+1].axis('equal')
 
     figname = "{}/{}/level_gake_time.png".format(config["FOLDER"], config["OUTPUT_FOLDER"])
-    fig.savefig(figname)
+    fig.savefig(figname, bbox_inches="tight")
     print("Saved file to {}".format(figname), flush=True)
 
 def plot_speed_ake(data, config):
@@ -354,7 +354,7 @@ def plot_speed_ake(data, config):
             # axes[j,i+1].axis('equal')
 
     figname = "{}/{}/level_ake_time.png".format(config["FOLDER"], config["OUTPUT_FOLDER"])
-    fig.savefig(figname)
+    fig.savefig(figname, bbox_inches="tight")
     print("Saved file to {}".format(figname), flush=True)
 
 def plot_speed_kem(data, config):
@@ -411,7 +411,7 @@ def plot_speed_kem(data, config):
             # axes[j,i].axis('equal')
 
     figname = "{}/{}/kem_level_time.png".format(config["FOLDER"], config["OUTPUT_FOLDER"])
-    fig.savefig(figname)
+    fig.savefig(figname, bbox_inches="tight")
     print("Saved file to {}".format(figname), flush=True)
 
 def main():
