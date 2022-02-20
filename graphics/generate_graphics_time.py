@@ -287,7 +287,7 @@ def plot_speed_gake(data, config):
             #     axes[j,i].axis('off')
 
 
-            sns.barplot(ax=axes[j,i], x="algorithm", y="mean_time_us", data=df2, palette=COLORS)
+            sns.barplot(ax=axes[j,i], x="algorithm", y="mean_time_us", data=df2, palette=COLORS, order=level)
             axes[j,i].set_title(operations_names[i], fontsize="x-large")
             # axes[j,i].legend(loc='upper left')
             axes[j,i].tick_params(axis='x', rotation=90)

@@ -213,7 +213,6 @@ def plot_speed_commitment(data, config):
             df = data[(data['operation'] == var) & data['algorithm'].isin(level)]
 
             df2 = df[['algorithm','operation', 'mean_cpu_cycles']]
-            print(df2["algorithm"])
             # print(df2)
             # print(level)
 
@@ -270,8 +269,8 @@ def plot_speed_gake(data, config):
         for (j, level) in enumerate(LEVELS):
             df = data[(data['operation'] == var) & data['algorithm'].isin(level)]
             df2 = df[['algorithm','operation', 'mean_cpu_cycles']]
-            # print(df2)
             # print(level)
+
 
             # with pd.option_context('display.max_rows', None, 'display.max_columns', None):
             #     print(df2)
@@ -285,8 +284,7 @@ def plot_speed_gake(data, config):
             #     )
             #     axes[j,i].axis('off')
 
-
-            sns.barplot(ax=axes[j,i], x="algorithm", y="mean_cpu_cycles", data=df2, palette=COLORS)
+            sns.barplot(ax=axes[j,i], x="algorithm", y="mean_cpu_cycles", data=df2, palette=COLORS, order=level)
             axes[j,i].set_title(operations_names[i], fontsize="x-large")
             # axes[j,i].legend(loc='upper left')
             axes[j,i].tick_params(axis='x', rotation=90)
