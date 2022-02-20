@@ -188,7 +188,7 @@ def plot_heatmap(data, config):
 
 def plot_speed_commitment(data, config):
 
-    fig, axes = plt.subplots(3,3, figsize=(25,25), sharey=False)
+    fig, axes = plt.subplots(3,3, figsize=(25,25), sharey=True)
     fig.suptitle('Commitment operations', fontsize=30)
     fig.subplots_adjust(hspace=0.75, wspace=0.4)
 
@@ -234,7 +234,7 @@ def plot_speed_commitment(data, config):
             axes[j,i].set_title(operations_names[i], fontsize="x-large")
             # axes[j,i].legend(loc='upper left')
             axes[j,i].tick_params(axis='x', rotation=90)
-            axes[j,i].set(yscale="log")
+            axes[j,i].set(yscale="symlog")
             axes[j,i].set_xlabel('', fontsize="x-large")
             axes[j,i].set_ylabel('Time (ns)', fontsize="x-large")
             # axes[j,i+1].axis('equal')
@@ -291,7 +291,7 @@ def plot_speed_gake(data, config):
             axes[j,i].set_title(operations_names[i], fontsize="x-large")
             # axes[j,i].legend(loc='upper left')
             axes[j,i].tick_params(axis='x', rotation=90)
-            axes[j,i].set(yscale="log")
+            axes[j,i].set(yscale="symlog")
             axes[j,i].set_xlabel('', fontsize="x-large")
             axes[j,i].set_ylabel('Time (ns)', fontsize="x-large")
             # axes[j,i+1].axis('equal')
@@ -348,7 +348,7 @@ def plot_speed_ake(data, config):
             axes[j,i].set_title(operations_names[i], fontsize="x-large")
             # axes[j,i].legend(loc='upper left')
             axes[j,i].tick_params(axis='x', rotation=90)
-            axes[j,i].set(yscale="log")
+            axes[j,i].set(yscale="symlog")
             axes[j,i].set_xlabel('', fontsize="x-large")
             axes[j,i].set_ylabel('Time (ns)', fontsize="x-large")
             # axes[j,i+1].axis('equal')
@@ -405,7 +405,7 @@ def plot_speed_kem(data, config):
             axes[j,i].set_title(operations_names[i], fontsize="x-large")
             # axes[j,i].legend(loc='upper left')
             axes[j,i].tick_params(axis='x', rotation=90)
-            axes[j,i].set(yscale="log")
+            axes[j,i].set(yscale="symlog")
             axes[j,i].set_xlabel('', fontsize="x-large")
             axes[j,i].set_ylabel('Time (ns)', fontsize="x-large")
             # axes[j,i].axis('equal')
