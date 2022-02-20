@@ -57,9 +57,9 @@ def plot_scalability_level(data, config):
         df = data[data['algorithm'].isin(level)]
 
         df2 = df[['algorithm', 'mean_cpu_cycles', 'N', 'operation']]
-        print(data)
+        # print(data)
         df2 = df2.groupby(['algorithm','N'])['mean_cpu_cycles'].sum().reset_index()
-        print(df2)
+        # print(df2)
         p = sns.lineplot(ax=axes[j], x="N", y="mean_cpu_cycles", hue="algorithm", data=df2, palette=COLORS, linewidth=2, style="algorithm", markers=True, dashes=False)
         axes[j].set_title("Level {}".format(LEVELS_LABELS[j]), fontsize="x-large")
         axes[j].set_xlabel('Number of parties', fontsize="x-large")
@@ -80,9 +80,9 @@ def plot_scalability(data, config):
     fig.subplots_adjust(hspace=0.75, wspace=0.4)
 
     df2 = data[['algorithm', 'mean_cpu_cycles', 'N', 'operation']]
-    print(data)
+    # print(data)
     df2 = df2.groupby(['algorithm','N'])['mean_cpu_cycles'].sum().reset_index()
-    print(df2)
+    # print(df2)
     p = sns.lineplot(ax=axes, x="N", y="mean_cpu_cycles", hue="algorithm", data=df2, palette=COLORS, linewidth=2, style="algorithm", markers=True, dashes=False)
     axes.set_xlabel('Number of parties', fontsize="x-large")
     axes.set_ylabel('CPU Cycles', fontsize="x-large")
@@ -162,7 +162,7 @@ def plot_heatmap(data, config):
     df = df[['algorithm', 'operation', 'mean_cpu_cycles']]
     df['mean_cpu_cycles'] = np.log(df['mean_cpu_cycles'])
     df = df.pivot(index='operation', columns='algorithm', values='mean_cpu_cycles')
-    print(df)
+    # print(df)
 
     grid_kws = {"height_ratios": (.9, .01), "hspace": .001}
     fig, (axes, cbar_ax) = plt.subplots(2, gridspec_kw=grid_kws, figsize=(18,18))
@@ -206,7 +206,6 @@ def plot_speed_commitment(data, config):
             return ""
 
     data["level"] = data.apply(conditions, axis=1)
-
     operations = ['init', 'commit', 'check']
     operations_names = ['Init', 'Commit', 'Check']
     for (i, var) in enumerate(operations):
@@ -214,8 +213,9 @@ def plot_speed_commitment(data, config):
             df = data[(data['operation'] == var) & data['algorithm'].isin(level)]
 
             df2 = df[['algorithm','operation', 'mean_cpu_cycles']]
-            print(df2)
-            print(level)
+            print(df2["algorithm"])
+            # print(df2)
+            # print(level)
 
             # with pd.option_context('display.max_rows', None, 'display.max_columns', None):
             #     print(df2)
@@ -269,10 +269,9 @@ def plot_speed_gake(data, config):
     for (i, var) in enumerate(operations):
         for (j, level) in enumerate(LEVELS):
             df = data[(data['operation'] == var) & data['algorithm'].isin(level)]
-
             df2 = df[['algorithm','operation', 'mean_cpu_cycles']]
-            print(df2)
-            print(level)
+            # print(df2)
+            # print(level)
 
             # with pd.option_context('display.max_rows', None, 'display.max_columns', None):
             #     print(df2)
@@ -328,8 +327,8 @@ def plot_speed_ake(data, config):
             df = data[(data['operation'] == var) & data['algorithm'].isin(level)]
 
             df2 = df[['algorithm','operation', 'mean_cpu_cycles']]
-            print(df2)
-            print(level)
+            # print(df2)
+            # print(level)
 
             # with pd.option_context('display.max_rows', None, 'display.max_columns', None):
             #     print(df2)
@@ -384,8 +383,8 @@ def plot_speed_kem(data, config):
             df = data[(data['operation'] == var) & data['algorithm'].isin(level)]
 
             df2 = df[['algorithm','operation', 'mean_cpu_cycles']]
-            print(df2)
-            print(level)
+            # print(df2)
+            # print(level)
 
             # with pd.option_context('display.max_rows', None, 'display.max_columns', None):
             #     print(df2)
