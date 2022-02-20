@@ -49,7 +49,7 @@ def plot_scalability_level(data, config):
         else:
             return ""
 
-    fig, axes = plt.subplots(3, figsize=(15,15))
+    fig, axes = plt.subplots(3, figsize=(15,15), dpi=200)
     fig.suptitle('Scalability', fontsize=30)
     fig.subplots_adjust(hspace=0.75, wspace=0.4)
 
@@ -75,7 +75,7 @@ def plot_scalability_level(data, config):
 
 def plot_scalability(data, config):
 
-    fig, axes = plt.subplots(1, figsize=(25,25))
+    fig, axes = plt.subplots(1, figsize=(25,25), dpi=200)
     fig.suptitle('Scalability', fontsize=30)
     fig.subplots_adjust(hspace=0.75, wspace=0.4)
 
@@ -112,7 +112,7 @@ def plot_heatmap_level(data, config):
         else:
             return ""
 
-    fig, axes2 = plt.subplots(1, 3, figsize=(30, 18))
+    fig, axes2 = plt.subplots(1, 3, figsize=(30, 18), dpi=200)
     fig.suptitle('Operation heatmap', fontsize=30)
     fig.subplots_adjust(hspace=0.75, wspace=0.4)
 
@@ -188,7 +188,7 @@ def plot_heatmap(data, config):
 
 def plot_speed_commitment(data, config):
 
-    fig, axes = plt.subplots(3,3, figsize=(25,25), sharey=True)
+    fig, axes = plt.subplots(3,3, figsize=(25,25), dpi=200, sharey=True)
     fig.suptitle('Commitment operations', fontsize=30)
     fig.subplots_adjust(hspace=0.75, wspace=0.4)
 
@@ -245,7 +245,7 @@ def plot_speed_commitment(data, config):
 
 def plot_speed_gake(data, config):
 
-    fig, axes = plt.subplots(3,4, figsize=(25,25), sharey=True)
+    fig, axes = plt.subplots(3,4, figsize=(25,25), dpi=200, sharey=True)
     fig.suptitle('GAKE operations', fontsize=30)
     fig.subplots_adjust(hspace=0.75, wspace=0.4)
 
@@ -302,7 +302,7 @@ def plot_speed_gake(data, config):
 
 def plot_speed_ake(data, config):
 
-    fig, axes = plt.subplots(3,3, figsize=(25,25), sharey=True)
+    fig, axes = plt.subplots(3,3, figsize=(25,25), dpi=200, sharey=True)
     fig.suptitle('AKE operations', fontsize=30)
     fig.subplots_adjust(hspace=0.75, wspace=0.4)
 
@@ -372,7 +372,7 @@ def plot_speed_kem(data, config):
         else:
             return ""
 
-    fig, axes = plt.subplots(3,3, figsize=(25,25), sharey=True)
+    fig, axes = plt.subplots(3,3, figsize=(25,25), dpi=200, sharey=True)
     fig.suptitle('KEM operations', fontsize=30)
     fig.subplots_adjust(hspace=0.75, wspace=0.4)
 
