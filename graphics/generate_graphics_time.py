@@ -63,7 +63,7 @@ def plot_scalability_level(data, config):
         p = sns.lineplot(ax=axes[j], x="N", y="mean_time_us", hue="algorithm", data=df2, palette=COLORS, linewidth=2, style="algorithm", markers=True, dashes=False)
         axes[j].set_title("Level {}".format(LEVELS_LABELS[j]), fontsize="x-large")
         axes[j].set_xlabel('Number of parties', fontsize="x-large")
-        axes[j].set_ylabel('Time (ns)', fontsize="x-large")
+        axes[j].set_ylabel('Time (us)', fontsize="x-large")
 
         h, l = p.get_legend_handles_labels()
         l, h = zip(*sorted(zip(l, h)))
@@ -85,7 +85,7 @@ def plot_scalability(data, config):
     print(df2)
     p = sns.lineplot(ax=axes, x="N", y="mean_time_us", hue="algorithm", data=df2, palette=COLORS, linewidth=2, style="algorithm", markers=True, dashes=False)
     axes.set_xlabel('Number of parties', fontsize="x-large")
-    axes.set_ylabel('Time (ns)', fontsize="x-large")
+    axes.set_ylabel('Time (us)', fontsize="x-large")
 
     h, l = p.get_legend_handles_labels()
     l, h = zip(*sorted(zip(l, h)))
@@ -236,7 +236,7 @@ def plot_speed_commitment(data, config):
             axes[j,i].tick_params(axis='x', rotation=90)
             axes[j,i].set(yscale="symlog")
             axes[j,i].set_xlabel('', fontsize="x-large")
-            axes[j,i].set_ylabel('Time (ns)', fontsize="x-large")
+            axes[j,i].set_ylabel('Time (us)', fontsize="x-large")
             # axes[j,i+1].axis('equal')
 
     figname = "{}/{}/level_commitment_time.png".format(config["FOLDER"], config["OUTPUT_FOLDER"])
@@ -293,7 +293,7 @@ def plot_speed_gake(data, config):
             axes[j,i].tick_params(axis='x', rotation=90)
             axes[j,i].set(yscale="symlog")
             axes[j,i].set_xlabel('', fontsize="x-large")
-            axes[j,i].set_ylabel('Time (ns)', fontsize="x-large")
+            axes[j,i].set_ylabel('Time (us)', fontsize="x-large")
             # axes[j,i+1].axis('equal')
 
     figname = "{}/{}/level_gake_time.png".format(config["FOLDER"], config["OUTPUT_FOLDER"])
@@ -350,7 +350,7 @@ def plot_speed_ake(data, config):
             axes[j,i].tick_params(axis='x', rotation=90)
             axes[j,i].set(yscale="symlog")
             axes[j,i].set_xlabel('', fontsize="x-large")
-            axes[j,i].set_ylabel('Time (ns)', fontsize="x-large")
+            axes[j,i].set_ylabel('Time (us)', fontsize="x-large")
             # axes[j,i+1].axis('equal')
 
     figname = "{}/{}/level_ake_time.png".format(config["FOLDER"], config["OUTPUT_FOLDER"])
@@ -407,7 +407,7 @@ def plot_speed_kem(data, config):
             axes[j,i].tick_params(axis='x', rotation=90)
             axes[j,i].set(yscale="symlog")
             axes[j,i].set_xlabel('', fontsize="x-large")
-            axes[j,i].set_ylabel('Time (ns)', fontsize="x-large")
+            axes[j,i].set_ylabel('Time (us)', fontsize="x-large")
             # axes[j,i].axis('equal')
 
     figname = "{}/{}/kem_level_time.png".format(config["FOLDER"], config["OUTPUT_FOLDER"])
