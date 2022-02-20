@@ -12,7 +12,7 @@ from matplotlib import pyplot as plt
 from matplotlib.colors import LinearSegmentedColormap
 
 COLORS = {
-    'Classic-McEliece-348864': "#372101" ,
+    'Classic-McEliece-348864': "#6F0062" ,
     'Classic-McEliece-348864f': "#A77500",
     'Classic-McEliece-460896': "#1CE6FF",
     'Classic-McEliece-460896f': "#FF34FF",
@@ -29,7 +29,7 @@ COLORS = {
     'NTRU-HPS-2048-677': "#5A0007",
     'NTRU-HRSS-701': "#809693",
     'NTRU-HPS-4096-821': "#0089A3",
-    'LightSaber-KEM': "#1B4400",
+    'LightSaber-KEM': "#FAD09F",
     'Saber-KEM': "#4FC601",
     'FireSaber-KEM': "#3B5DFF"
 }
