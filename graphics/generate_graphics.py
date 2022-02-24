@@ -49,7 +49,7 @@ def plot_scalability_level(data, config):
         else:
             return ""
 
-    fig, axes = plt.subplots(3, figsize=(18,18), dpi=200, sharey=True)
+    fig, axes = plt.subplots(3, figsize=(18,18), dpi=200, sharey=False)
     fig.suptitle('Scalability', fontsize=30)
     fig.subplots_adjust(hspace=0.75, wspace=0.4)
 
@@ -75,7 +75,7 @@ def plot_scalability_level(data, config):
 
 def plot_scalability(data, config):
 
-    fig, axes = plt.subplots(1, figsize=(18,18), dpi=200)
+    fig, axes = plt.subplots(1, figsize=(18,18), dpi=200, sharey=False)
     fig.suptitle('Scalability', fontsize=30)
     fig.subplots_adjust(hspace=0.75, wspace=0.4)
 

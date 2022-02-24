@@ -49,7 +49,7 @@ def plot_scalability_level(data, config):
         else:
             return ""
 
-    fig, axes = plt.subplots(3, figsize=(18,18), dpi=200)
+    fig, axes = plt.subplots(3, figsize=(18,18), dpi=200, sharey=False)
     fig.suptitle('Scalability', fontsize=30)
     fig.subplots_adjust(hspace=0.75, wspace=0.4)
 
@@ -59,11 +59,13 @@ def plot_scalability_level(data, config):
         df2 = df[['algorithm', 'mean_time_us', 'N', 'operation']]
         # print(data)
         df2 = df2.groupby(['algorithm','N'])['mean_time_us'].sum().reset_index()
+
         # print(df2)
         p = sns.lineplot(ax=axes[j], x="N", y="mean_time_us", hue="algorithm", data=df2, palette=COLORS, linewidth=2, style="algorithm", markers=True, dashes=False)
         axes[j].set_title("Level {}".format(LEVELS_LABELS[j]), fontsize="x-large")
         axes[j].set_xlabel('Number of parties', fontsize="x-large")
         axes[j].set_ylabel('Time (us)', fontsize="x-large")
+        # axes[j].set(yscale="symlog")
 
         h, l = p.get_legend_handles_labels()
         l, h = zip(*sorted(zip(l, h)))
@@ -75,7 +77,7 @@ def plot_scalability_level(data, config):
 
 def plot_scalability(data, config):
 
-    fig, axes = plt.subplots(1, figsize=(18,18), dpi=200)
+    fig, axes = plt.subplots(1, figsize=(18,18), dpi=200, sharey=False)
     fig.suptitle('Scalability', fontsize=30)
     fig.subplots_adjust(hspace=0.75, wspace=0.4)
 
