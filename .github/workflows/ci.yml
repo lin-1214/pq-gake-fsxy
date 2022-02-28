@@ -99,7 +99,7 @@ jobs:
         pip install -r graphics/requirements.txt
         python graphics/generate_graphics.py graphics/config.yaml
         python graphics/generate_graphics_time.py graphics/config.yaml
-        python graphics/generate_graphics_foake_vs_fsxy.py.py graphics/config.yaml
+        python graphics/generate_graphics_foake_vs_fsxy.py graphics/config.yaml
         bash graphics/cut-images.sh
 
     - name: Archive results
