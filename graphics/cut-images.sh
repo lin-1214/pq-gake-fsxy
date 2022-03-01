@@ -6,6 +6,7 @@ FILES=(
   "cycles_level_commitment"
   "cycles_level_gake"
 )
+INPUT="build/results"
 OUTPUT="build/results/cuts"
 
 mkdir -p ${OUTPUT}
@@ -13,12 +14,12 @@ mkdir -p ${OUTPUT}
 for file in "${FILES[@]}"
 do
   echo $file
-  convert $file.png -crop 3060x1100+0+300 ${OUTPUT}/${file}_level1.png
-  convert $file.png -crop 3060x1100+0+1375 ${OUTPUT}/${file}_level3.png
-  convert $file.png -crop 3060x1100+0+2475 ${OUTPUT}/${file}_level5.png
+  convert ${INPUT}/${file}.png -crop 3060x1100+0+300 ${OUTPUT}/${file}_level1.png
+  convert ${INPUT}/${file}.png -crop 3060x1100+0+1375 ${OUTPUT}/${file}_level3.png
+  convert ${INPUT}/${file}.png -crop 3060x1100+0+2475 ${OUTPUT}/${file}_level5.png
 done
 
 file="scalability_level_time"
-convert $file.png -crop 3060x825+0+300 ${OUTPUT}/${file}_level1.png
-convert $file.png -crop 3060x825+0+1375 ${OUTPUT}/${file}_level3.png
-convert $file.png -crop 3060x825+0+2475 ${OUTPUT}/${file}_level5.png
+convert ${INPUT}/${file}.png -crop 3060x825+0+300 ${OUTPUT}/${file}_level1.png
+convert ${INPUT}/${file}.png -crop 3060x825+0+1375 ${OUTPUT}/${file}_level3.png
+convert ${INPUT}/${file}.png -crop 3060x825+0+2475 ${OUTPUT}/${file}_level5.png
