@@ -2,7 +2,7 @@
 
 [![CMake Build Matrix](https://github.com/jiep/pq-gake-fsxy/actions/workflows/ci.yml/badge.svg)](https://github.com/jiep/pq-gake-fsxy/actions/workflows/ci.yml)
 
-This repository implements a Post-Quantum Group Authenticated Key Exchange protocol based on the FSXY transformation on Classic McEliece, Kyber, NTRU, and Saber and a compares their performance.
+This repository implements a Post-Quantum Group Authenticated Key Exchange protocol based on design from[1] with the FSXY transformation[2],  on Classic McEliece, Kyber, NTRU, and Saber and a compares their performance.
 
 ## What are Classic McEliece, Kyber, NTRU, and Saber?
 Classic McEliece, Kyber, NTRU, and Saber are finalist key encapsulation mechanisms (KEM) of the [NIST Post-Quantum Criptography standardization project](https://csrc.nist.gov/Projects/post-quantum-cryptography).
@@ -474,7 +474,6 @@ Time stats
 </details>
 
 # References
+[1] Escribano Pablos, J.I.; González Vasco, M.I.; Marriaga, M.E.; Pérez del Pozo, Á.L. "Compiled Constructions towards Post-Quantum Group Key Exchange: A Design from Kyber," 2020 Mathematics, 8, 1853, doi:10.3390/math8101853
 
-* Fujioka, A.; Suzuki, K.; Xagawa K.; Yoneyama K.; "Practical and post-quantum authenticated key exchange from one-way secure key encapsulation mechanism," 2013. In Proceedings of the 8th ACM SIGSAC symposium on Information, computer and communications security (ASIA CCS '13). Association for Computing Machinery, New York, NY, USA, 83–94. doi:10.1145/2484313.2484323
-
-* Escribano Pablos, J.I.; González Vasco, M.I.; Marriaga, M.E.; Pérez del Pozo, Á.L. "Compiled Constructions towards Post-Quantum Group Key Exchange: A Design from Kyber," 2020 Mathematics, 8, 1853, doi: 10.3390/math8101853
+[2] Fujioka, A.; Suzuki, K.; Xagawa K.; Yoneyama K.; "Practical and post-quantum authenticated key exchange from one-way secure key encapsulation mechanism," 2013. In Proceedings of the 8th ACM SIGSAC symposium on Information, computer and communications security (ASIA CCS '13). Association for Computing Machinery, New York, NY, USA, 83–94. doi:10.1145/2484313.2484323
