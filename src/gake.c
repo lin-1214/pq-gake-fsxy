@@ -4,7 +4,7 @@
 #include <time.h>
 
 #include "gake.h"
-#include "gcwr-ake.h"
+#include "fsxy-ake.h"
 #include "commitment.h"
 
 void print_sk(uint8_t *key, size_t length) {

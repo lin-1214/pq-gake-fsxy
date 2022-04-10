@@ -2,7 +2,7 @@
 #include <string.h>
 #include <oqs/oqs.h>
 
-#include "gcwr-ake.h"
+#include "fsxy-ake.h"
 
 int is_mceliece(OQS_KEM* kem) {
   return strstr(kem->method_name, "McEliece") != NULL ? 1 : 0;

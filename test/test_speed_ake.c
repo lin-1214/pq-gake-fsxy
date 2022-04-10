@@ -16,7 +16,7 @@
 #endif
 #include "ds_benchmark.h"
 #include "system_info.h"
-#include "../src/gcwr-ake.h"
+#include "../src/fsxy-ake.h"
 #include "../src/utils.h"
 
 static OQS_STATUS ake_speed_wrapper(const char *method_name, int iterations, bool printInfo) {
