@@ -1,7 +1,12 @@
-# GCwR implementation
+# Post-Quantum Group Authenticated Key Exchange protocol with the LibOQS library
 
-[![CMake Build Matrix](https://github.com/jiep/gcwr-implementation/actions/workflows/ci.yml/badge.svg)](https://github.com/jiep/gcwr-implementation/actions/workflows/ci.yml)
+[![CMake Build Matrix](https://github.com/jiep/pq-gake-fsxy/actions/workflows/ci.yml/badge.svg)](https://github.com/jiep/pq-gake-fsxy/actions/workflows/ci.yml)
 
+This repository implements a Post-Quantum Group Authenticated Key Exchange protocol based on the FSXY transformation on Classic McEliece, Kyber, NTRU, and Saber and a compares their performance.
+
+## Dependencies
+
+* [LibOQS v0.7.0](https://github.com/open-quantum-safe/liboqs)
 
 ## Supported algorithms
 
