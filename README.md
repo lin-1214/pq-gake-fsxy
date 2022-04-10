@@ -97,7 +97,6 @@ Time stats
 <details>
   <summary>Click to expand!</summary>
 
-	```
 	./bin/test_gake 3 LightSaber-KEM -v
 	Party 0
 		Public key:  6f3780906f6dd7543d01...cf24633139725f08d864
@@ -470,7 +469,6 @@ Time stats
 		Round 3 time   : 0.001s (16.60%)
 		Round 4 time   : 0.001s (19.43%)
 		Total time     : 0.005s (100.00%)
-	```
 </details>
 
 # References
