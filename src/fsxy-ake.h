@@ -20,8 +20,8 @@ void gen_sk(uint8_t *sid, uint8_t *concat_keys, size_t length_sid, size_t length
 
 
 void concat_sid(OQS_KEM* kem,
-                const char UA[PID_LENGTH],
-                const char UB[PID_LENGTH],
+                const char *UA,
+                const char *UB,
                 const uint8_t *ekA1,
                 const uint8_t *ekB1,
                 const uint8_t *cA1,

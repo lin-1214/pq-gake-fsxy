@@ -16,8 +16,8 @@ void concat_keys(const uint8_t *key1, const uint8_t *key2, const uint8_t *key3,
 }
 
 void concat_sid(OQS_KEM* kem,
-                const char UA[PID_LENGTH],
-                const char UB[PID_LENGTH],
+                const char *UA,
+                const char *UB,
                 const uint8_t *ekA1,
                 const uint8_t *ekB1,
                 const uint8_t *cA1,
@@ -26,8 +26,8 @@ void concat_sid(OQS_KEM* kem,
                 const uint8_t *cB2,
                 uint8_t *sid) {
 
-  memcpy(sid, UA, PID_LENGTH);
-  memcpy(sid + PID_LENGTH, UB, PID_LENGTH);
+  strncpy((char *)sid, UA, PID_LENGTH);
+  strncpy((char *)sid + PID_LENGTH, UB, PID_LENGTH);
   memcpy(sid + 2*PID_LENGTH, ekA1, kem->length_public_key);
   memcpy(sid + 2*PID_LENGTH + kem->length_public_key, ekA2, kem->length_public_key);
   memcpy(sid + 2*PID_LENGTH + 2*kem->length_public_key, ekB1, kem->length_public_key);
@@ -101,6 +101,7 @@ void ake_algB(OQS_KEM* kem,
   uint8_t *tempB1 = malloc(kem->length_shared_secret + kem->length_secret_key);
   uint8_t *hashB1 = malloc(kem->length_shared_secret);
   uint8_t *sid = malloc(sid_length);
+
   memcpy(tempB1, rB1, kem->length_shared_secret);
   memcpy(tempB1 + kem->length_shared_secret, dkB1, kem->length_secret_key);
   OQS_SHA3_sha3_256(hashB1, tempB1, kem->length_shared_secret + kem->length_secret_key);
